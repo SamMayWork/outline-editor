@@ -25,13 +25,11 @@ html, body {
 }
 #sidebar * {
   width: 100%;
+  font-size: 3em;
 }
 #sidebar *:hover {
   background-color: #f7f7f7;
   display: block;
-}
-#sidebar #indent {
-  font-size: 3em;
 }
 
 /*# sourceMappingURL=editor-styles.css.map */
