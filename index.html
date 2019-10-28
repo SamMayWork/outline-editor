@@ -3,17 +3,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="css/editor-styles.css">
-    <script src="scripts/editor.js"></script>
+    <link rel="stylesheet" href="css/landing-page.css">
+    <script src="scripts/landing-page.js"></script>
     <title>Document</title>
 </head>
 <body onload="start();">
-    <div class="window-container">
-        <textarea name="" id="editorwindow"></textarea>
-        <div id="sidebar">
-            <button id=indent>i</button>
-            <button id=outdent>o</button>
-        </div>
+    <div class="title-container">
+        <h1>OEdit.</h1>
+        <h2>The down-to-earth, keyboard oriented text-editor.</h2>
+    </div>
+    <div id="button-container">
+        <button id="newnote">New Note</button>
+        <a href="">View Source</a>
+    </div>
+    <div id="notecontainer">
+        <p>Note Title</p>
+        <input type="text">
+        <button id="go">Go</button>
     </div>
 </body>
 </html>

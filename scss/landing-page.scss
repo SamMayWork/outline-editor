@@ -1,0 +1,104 @@
+@import "_common.scss";
+
+body, html {
+    padding : 0;
+    margin : 0;
+    width : 100%;
+    height : 100%;
+
+    font-family: 'Segoe UI Light', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.title-container {
+    width : 100%;
+
+    * {
+        text-align: center;
+    }
+
+    h1 {
+        padding-top : 2.5em;
+        font-size : 4em;
+        color : $dark;
+    }
+
+    h2 {
+        font-size : 2em;
+    }
+}
+
+#button-container {
+
+    @mixin button-styling {
+        border : 2px solid $black;
+        font-size : 1.5em;
+        font-family: 'Segoe UI Bold', Tahoma, Geneva, Verdana, sans-serif;
+        padding : 5px 10px 5px 10px;
+        margin-top : 0.5em;
+        text-align : center;
+        text-decoration : none;
+        color : $black;
+    }
+
+    padding : 0 20vw 0 20vw; 
+
+    button {
+        @include button-styling;
+        background-color : #ffffff;
+        width : 100%;
+    }
+
+    * {
+       display : block;
+       
+    }
+
+    a  {
+        @include button-styling;
+    }
+}
+
+#notecontainer {
+    transition : all 1s ease-in;
+
+    display : none;
+
+    position : absolute;
+
+    bottom : 0px;
+    right : 50%;
+    transform : translateX(50%);
+
+    margin-bottom : 4.4em;
+
+    border : 2px solid $black;
+    border-radius : 5px;
+
+    padding : 20px;
+
+    font-size : 2em;
+
+    p {
+
+    }
+
+    input {
+        border : 0;
+        border-bottom : 2px solid $black;
+        font-size : 1.5em;
+        max-width : 20vw;
+    }
+
+    button {
+        background-color : $white;
+        border-radius : 5px;
+        border : 2px solid $black;
+        padding : 4px;
+        font-size : 1.2em;
+    }
+
+    * {
+        font-family: 'Segoe UI Bold', Tahoma, Geneva, Verdana, sans-serif;
+        display : inline;
+    }
+}

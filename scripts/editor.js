@@ -1,8 +1,36 @@
 "use strict";
 
+let cursorPosition = 0;
+const rootElement = "Hello, world!";
+
+const settings = {
+    "indent" : "Tab",
+    "shiftForOutdent" : true,
+    "outdent" : "Tab"
+}
+
 function start () {
+    window.editorwindow.value = rootElement;
+
+    window.editorwindow.addEventListener("keydown", preventTab);
+    window.editorwindow.addEventListener("keyup", output);
+    window.editorwindow.addEventListener("keyup", saveCursorPosition);
+
     window.indent.addEventListener ("click", indentOnStartOfLine);
     window.outdent.addEventListener ("click", outdentOnStartOfLine);
+
+    window.editorwindow.addEventListener("blur", saveCursorPosition);
+}
+
+function output () {
+    interpretContent(window.editorwindow.value, window.outputWindow);
+}
+
+/**
+ * Event handler for focus leaving the textarea
+ */
+function saveCursorPosition () {
+    cursorPosition = window.editorwindow.selectionStart;
 }
 
 /**
@@ -10,17 +38,9 @@ function start () {
  * @param {*} e 
  */
 function outdentOnStartOfLine (e) {
-    const rowsToSelection = getRowsToSelection();
-    const restOfRows = getPostSelectionRows();
-
-    let currentRow = rowsToSelection[rowsToSelection.length-1];
-    let outdentedLine = outdentLine(currentRow);
-
-    rowsToSelection.pop();
-    restOfRows.shift();
-    rowsToSelection.push(outdentedLine);
-
-    window.editorwindow.value = rowsToSelection.concat(restOfRows).join('\n');
+    const currentRow = outdentLine(getSelectedRow());
+    window.editorwindow.value = getRowsToSelection().join("\n") + "\n" + currentRow + getPostSelectionRows().join("\n")
+    cursorPosition -= 1;
 }
 
 /**
@@ -28,33 +48,65 @@ function outdentOnStartOfLine (e) {
  * @param {*} e 
  */
 function indentOnStartOfLine (e) {
-    const indentedEditor = splice(window.editorwindow.value,
-        getCharacterPosOfSelectedLine(),
-        "\t");
-    window.editorwindow.value = indentedEditor;
+    if(cursorPosition <= rootElement.length) {
+        return;
+    }
+    window.editorwindow.value = getRowsToSelection().join("\n") + "\n\t" + getSelectedRow() + getPostSelectionRows().join("\n");
+
+    cursorPosition += 1;
 }
 
 /**
- * Gets an array of all the rows after and including the selected line
+ * Returns the entire content of the selected row
+ */
+function getSelectedRow () {
+    let content = window.editorwindow.value;
+    content = content.replace(getRowsToSelection().join("\n"), "");
+    content = content.replace(getPostSelectionRows().join("\n"), "");
+    return content.replace("\n", "");
+}
+
+/**
+ * Gets an array of all the rows after the selected line
  */
 function getPostSelectionRows () {
-    return window.editorwindow.value.substring(window.editorwindow.selectionStart).split("\n");
+    const allRows = window.editorwindow.value.split("\n");
+    const rowCountBeforeSelection = getRowsToSelection().length;
+    return allRows.slice(rowCountBeforeSelection).slice(1);
 }
 
 /**
- * Gets an array of all the rows of content up to, and including the selected line 
+ * Gets an array of all the rows of content up to the selected line
  */
 function getRowsToSelection () {
-    return window.editorwindow.value.substring(0, window.editorwindow.selectionStart).split("\n");
+    const rows = window.editorwindow.value.substring(0, cursorPosition).split("\n");
+    return rows.slice(0, rows.length-1);
 }
 
 /**
- * Gets the character position for the start of the selected line
+ * Prevents the user being able to switch focus while editing text
+ * @param {*} e 
  */
-function getCharacterPosOfSelectedLine () {
-    let content = getRowsToSelection();
-    let curRowLength = content[content.length-1].split("").length;
-    return window.editorwindow.selectionStart - curRowLength;
+function preventTab (e) {
+
+    if (e.key != settings.indent && e.key != settings.outdent) {
+        return;
+    }
+
+    if (e.key === settings.indent) {
+        if (e.shiftKey == true && settings.shiftForOutdent== true) {
+            outdentOnStartOfLine();
+        } else {
+            indentOnStartOfLine();
+        }
+    } else if (e.key === settings.outdent && settings.shiftForOutdent == false) {
+        outdentOnStartOfLine();
+    }
+ 
+    window.editorwindow.selectionStart = cursorPosition;
+    window.editorwindow.selectionEnd = cursorPosition;
+    e.target.focus();
+    e.preventDefault();
 }
 
 /**
