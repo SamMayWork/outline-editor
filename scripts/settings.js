@@ -5,5 +5,5 @@ function start () {
 }
 
 function generateKeyBind (setting) {
-
+    
 }

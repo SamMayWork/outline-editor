@@ -19,11 +19,7 @@ function processHeadings (str) {
         }
     }
 
-    console.log(count);
-    
     if (count > 0) {
-        console.log(">0");
-        
         strA.splice(0, count, `<h${count}>`);
         strA.push(`</h${count}>`);
     }

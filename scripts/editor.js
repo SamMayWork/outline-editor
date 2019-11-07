@@ -1,7 +1,7 @@
 "use strict";
 
 let cursorPosition = 0;
-const rootElement = "Hello, world!";
+let rootElement = "";
 
 const settings = {
     "indent" : "Tab",
@@ -10,7 +10,33 @@ const settings = {
 }
 
 function start () {
-    window.editorwindow.value = rootElement;
+
+    if (localStorage.getItem("newNote") == "1") {
+        rootElement = `#${localStorage.getItem("rootElement")}`;
+        window.editorwindow.value = rootElement;
+        window.noteTitle.textContent = localStorage.getItem("rootElement");
+
+        // Now convert the document from a temporary file to a permanent one
+        // by assigning it an ID and assigning it its starting content
+        localStorage.setItem(`${generateId(6)}`, { 
+            "title" : localStorage.getItem("rootElement"),
+            "id" : generateId(8),
+            "content" : ""
+        });
+
+        output(window.editorwindow.value, window.outputWindow);
+    } else {
+        oldElementID = `${localStorage.getItem("loadNote")}`;
+        loadedElement = localStorage.getItem(oldElementID);
+        
+        window.editorwindow.value = loadedElement.content;
+        window.noteTitle = loadedElement.title;
+
+        output(window.editorwindow.value, window.outputWindow);
+    }
+
+    localStorage.setItem("newNote", "0");
+
 
     window.editorwindow.addEventListener("keydown", preventTab);
     window.editorwindow.addEventListener("keyup", output);
@@ -138,4 +164,19 @@ function splice (str, index, value) {
     let newArr2 = newArr1.concat(charsArr2);
 
     return newArr2;
+}
+
+/**
+ * Generates a psuedo-random ID of a given length
+ * @param {number} length The length of the ID to return
+ */
+function generateId (length) {
+    const values = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    let generatedId = [];
+
+    for (let i = 0; i < length; i++) {
+        generatedId.unshift(values[Math.floor(Math.random() * values.length)]);
+    }
+
+    return generatedId.join("");
 }

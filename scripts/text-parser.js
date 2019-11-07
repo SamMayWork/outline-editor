@@ -2,7 +2,7 @@
 
 const specChars = {
     "chars" : [
-        { "md" : "\t", "html" : '&nbsp;&nbsp;&nbsp;&nbsp;- ' },
+        { "md" : "\t", "html" : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' },
         { "md" : "\n", "html" : '<br>' },
         { "md" : "*", "html" : "<strong>" },
         { "md" : "_", "html" : "<em>" }
