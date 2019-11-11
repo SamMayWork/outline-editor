@@ -24,7 +24,7 @@ function start () {
             "content" : ""
         });
 
-        output(window.editorwindow.value, window.outputWindow);
+        output(null);
     } else {
         oldElementID = `${localStorage.getItem("loadNote")}`;
         loadedElement = localStorage.getItem(oldElementID);
@@ -32,7 +32,7 @@ function start () {
         window.editorwindow.value = loadedElement.content;
         window.noteTitle = loadedElement.title;
 
-        output(window.editorwindow.value, window.outputWindow);
+        output(null);
     }
 
     localStorage.setItem("newNote", "0");
@@ -48,7 +48,13 @@ function start () {
     window.editorwindow.addEventListener("blur", saveCursorPosition);
 }
 
-function output () {
+/**
+ * Updates the window content by interpeting the markdowm in the editor
+ * @param {*} e 
+ */
+function output (e) {
+    // Prevent updating on arrow keys for optimisation
+    if (e !== null && e.key.substring(0, 5) == "Arrow") { return; }
     interpretContent(window.editorwindow.value, window.outputWindow);
 }
 

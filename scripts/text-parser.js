@@ -1,11 +1,12 @@
 "use strict";
 
+// A collection of markdown characters and their HTML equivalent
 const specChars = {
     "chars" : [
         { "md" : "\t", "html" : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' },
         { "md" : "\n", "html" : '<br>' },
-        { "md" : "*", "html" : "<strong>" },
-        { "md" : "_", "html" : "<em>" }
+        { "md" : "*", "html" : "<strong>", "ehtml" : "</strong>" },
+        { "md" : "_", "html" : "<em>", "ehtml" : "</em>" }
     ]
 }
 
@@ -19,15 +20,15 @@ function interpretContent (str, element) {
     element.innerHTML = "";
     const lines = str.split("\n");    
     for (let i of lines) {
-        element.innerHTML += convertToHTML(i) + "<br>";
+        element.innerHTML += convertMdToHTML(i) + "<br>";
     }
 }
 
 /**
  * Takes a line of input and converts the entire line fromn markdown into HTML
- * @param {*} str String to convert into HTML
+ * @param {String} str String to convert into HTML
  */
-function convertToHTML(str) {
+function convertMdToHTML(str) {
     
     str = escapeStrings(str);
     str = processHeadings(str);
@@ -35,21 +36,44 @@ function convertToHTML(str) {
     const strA = str.split("");
     const tokens = [];
 
+    // Go through each character
     for (let i = 0; i < strA.length; i++) {
+
+        // Does the character match any of the special markdown chars we're looking for?
         for (let charI = 0; charI < specChars.chars.length; charI++) {
+
+            // Sweet, push the index of the character and the chars we're replacing
+            // it with into the list
             if (strA[i] == specChars.chars[charI].md) {
-                tokens.push([i, charI]);
+                // Count how many of that kind of token already exist on the line
+                let count = 0;
+                for (let token of tokens) {
+                    if (token[1] == charI) {
+                        count += 1;
+                    }
+                }
+
+                // If the amount is even or 0, then push a start tag, otherwise push an end tag
+                if (count == 0 || count % 2 == 0) { tokens.push([i, charI, specChars.chars[charI].html]); continue; }
+                if (count % 2 == 1) { tokens.push([i, charI, specChars.chars[charI].ehtml]); }
             }
         }
-    }
-    
-    for (let i of tokens) {
-        strA.splice(i[0], 1, specChars.chars[i[1]].html);
+    }    
+
+    for (let token of tokens) {
+        // Overwrite the markdown character with the chars we need for the HTML version
+        console.log(`${token}`);
+        
+        strA.splice(token[0], 1, token[2]);
     }
 
     return strA.join("");
 }
 
+/**
+ * Escapes a string of all angle brackets by replacing them with whitespace
+ * @param {String} str The string to remove angle brackets from 
+ */
 function escapeStrings (str) {
     const strA = str.split("");
     const naughtyObjects = [];
@@ -66,6 +90,10 @@ function escapeStrings (str) {
     return strA.join("");
 }
 
+/**
+ * Converts all hashes into HTML headings
+ * @param {String} str 
+ */
 function processHeadings (str) {
     const strA = str.split("");
     let count = 0;
@@ -77,7 +105,7 @@ function processHeadings (str) {
         }
     }
 
-    if (count > 0) {
+    if (count > 0 && count <= 6) {
         strA.splice(0, count, `<h${count}>`);
         strA.push(`</h${count}>`);
     }
