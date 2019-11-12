@@ -3,7 +3,7 @@
 // A collection of markdown characters and their HTML equivalent
 const specChars = {
     "chars" : [
-        { "md" : "\t", "html" : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' },
+        { "md" : "\t", "html" : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', "ehtml" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" },
         { "md" : "\n", "html" : '<br>' },
         { "md" : "*", "html" : "<strong>", "ehtml" : "</strong>" },
         { "md" : "_", "html" : "<em>", "ehtml" : "</em>" }
@@ -45,6 +45,7 @@ function convertMdToHTML(str) {
             // Sweet, push the index of the character and the chars we're replacing
             // it with into the list
             if (strA[i] == specChars.chars[charI].md) {
+
                 // Count how many of that kind of token already exist on the line
                 let count = 0;
                 for (let token of tokens) {
