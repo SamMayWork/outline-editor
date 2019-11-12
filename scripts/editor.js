@@ -35,8 +35,9 @@ function start () {
         output(null);
     }
 
+    // Regardless of whether we're editing a new note or an old note
+    // set the new note flag to 0
     localStorage.setItem("newNote", "0");
-
 
     window.editorwindow.addEventListener("keydown", preventTab);
     window.editorwindow.addEventListener("keyup", output);
@@ -73,6 +74,7 @@ function outdentOnStartOfLine (e) {
     const currentRow = outdentLine(getSelectedRow());
     window.editorwindow.value = getRowsToSelection().join("\n") + "\n" + currentRow + getPostSelectionRows().join("\n")
     cursorPosition -= 1;
+    output(null);
 }
 
 /**
@@ -86,6 +88,7 @@ function indentOnStartOfLine (e) {
     window.editorwindow.value = getRowsToSelection().join("\n") + "\n\t" + getSelectedRow() + getPostSelectionRows().join("\n");
 
     cursorPosition += 1;
+    output(null);
 }
 
 /**
