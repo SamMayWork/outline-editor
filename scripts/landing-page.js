@@ -1,4 +1,12 @@
+const devTools = true;
+
 function start () {
+
+    // If we're lauching with the dev tools enabled clear the
+    // local storage so that we've got a fresh slate
+    if (devTools) {
+        localStorage.clear();        
+    }
 
     if (localStorage.getItem("notes") == undefined) {
         localStorage.setItem("notes", []);
@@ -12,7 +20,7 @@ function start () {
 }
 
 function makeTitleInputVisible (e) {
-    window.rootElement.style.display = "block";
+    window.notecontainer.style.display = "block";
 }
 
 /**
@@ -24,6 +32,8 @@ function makeNewNote () {
         "content" : "",
         id : generateId(8)
     });
+
+    window.open("editor.html", "_self", false);
 }
 
 /**
