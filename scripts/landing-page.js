@@ -1,14 +1,37 @@
 function start () {
-    window.newnote.addEventListener("click", getTitle);
+    window.newnote.addEventListener("click", makeTitleInputVisible);
+
+    // When the new note button is clicked, make all of the note in
+    // local storage and then open it inside of the editor
     window.go.addEventListener("click", makeNewNote);
 }
 
-function getTitle () {
-    window.notecontainer.style.display = "block";
+function makeTitleInputVisible (e) {
+    window.rootElement.style.display = "block";
 }
 
+/**
+ * Makes a new note object in localstorage
+ */
 function makeNewNote () {
-    localStorage.setItem("rootElement", window.rootElement.value);
-    localStorage.setItem("newNote", "1");
-    window.open ("editor.html", "_self", false);
+    localStorage.setItem("editingNote", {
+        "title" : window.rootElement.value,
+        "content" : "",
+        id : generateId(8)
+    });
+}
+
+/**
+ * Generates a psuedo-random ID of a given length
+ * @param {number} length The length of the ID to return
+ */
+function generateId (length) {
+    const values = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    let generatedId = [];
+
+    for (let i = 0; i < length; i++) {
+        generatedId.unshift(values[Math.floor(Math.random() * values.length)]);
+    }
+
+    return generatedId.join("");
 }
