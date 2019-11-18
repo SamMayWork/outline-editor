@@ -1,4 +1,9 @@
 function start () {
+
+    if (localStorage.getItem("notes") == undefined) {
+        localStorage.setItem("notes", []);
+    }
+
     window.newnote.addEventListener("click", makeTitleInputVisible);
 
     // When the new note button is clicked, make all of the note in
