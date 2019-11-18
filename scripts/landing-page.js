@@ -9,7 +9,7 @@ function start () {
     }
 
     if (localStorage.getItem("notes") == undefined) {
-        localStorage.setItem("notes", []);
+        localStorage.setItem("notes", JSON.stringify([]));
     }
 
     window.newnote.addEventListener("click", makeTitleInputVisible);
@@ -17,21 +17,25 @@ function start () {
     // When the new note button is clicked, make all of the note in
     // local storage and then open it inside of the editor
     window.go.addEventListener("click", makeNewNote);
+    window.rootElement.addEventListener("keydown", makeNewNote);
 }
 
 function makeTitleInputVisible (e) {
     window.notecontainer.style.display = "block";
+    window.rootElement.focus();
 }
 
 /**
  * Makes a new note object in localstorage
  */
-function makeNewNote () {
-    localStorage.setItem("editingNote", {
+function makeNewNote (e) {
+    if (e.key != "Enter") return;
+
+    localStorage.setItem("editingNote", JSON.stringify({
         "title" : window.rootElement.value,
         "content" : "",
         id : generateId(8)
-    });
+    }));
 
     window.open("editor.html", "_self", false);
 }
