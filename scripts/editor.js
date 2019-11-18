@@ -11,6 +11,7 @@ const settings = {
 
 function start () {
 
+    // Loading and generation system for old and new notes
     if (localStorage.getItem("newNote") == "1") {
         rootElement = `#${localStorage.getItem("rootElement")}`;
         window.editorwindow.value = rootElement;
@@ -40,6 +41,7 @@ function start () {
     localStorage.setItem("newNote", "0");
 
     window.editorwindow.addEventListener("keydown", preventTab);
+    window.editorwindow.addEventListener("keydown", handleNewLine);
     window.editorwindow.addEventListener("keyup", output);
     window.editorwindow.addEventListener("keyup", saveCursorPosition);
 
@@ -47,6 +49,18 @@ function start () {
     window.outdent.addEventListener ("click", outdentOnStartOfLine);
 
     window.editorwindow.addEventListener("blur", saveCursorPosition);
+}
+
+/**
+ * Handle for a new line being entered
+ * @param {*} e 
+ */
+function handleNewLine (e) {
+    if (e.key != "Enter") {
+        return;
+    }
+
+    
 }
 
 /**
@@ -138,8 +152,9 @@ function preventTab (e) {
         outdentOnStartOfLine();
     }
  
-    window.editorwindow.selectionStart = cursorPosition;
-    window.editorwindow.selectionEnd = cursorPosition;
+    //window.editorwindow.selectionStart = cursorPosition;
+    //window.editorwindow.selectionEnd = cursorPosition;
+    window.editorwindow.setSelectionRange(cursorPosition, cursorPosition);
     e.target.focus();
     e.preventDefault();
 }
