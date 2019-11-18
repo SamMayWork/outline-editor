@@ -9,39 +9,60 @@ const settings = {
     "outdent" : "Tab"
 }
 
+let currentNoteID = "";
+
 function start () {
 
-    // Loading and generation system for old and new notes
-    if (localStorage.getItem("newNote") == "1") {
-        rootElement = `#${localStorage.getItem("rootElement")}`;
-        window.editorwindow.value = rootElement;
-        window.noteTitle.textContent = localStorage.getItem("rootElement");
+    let contentFound = false;
 
-        // Now convert the document from a temporary file to a permanent one
-        // by assigning it an ID and assigning it its starting content
-        localStorage.setItem(`${generateId(6)}`, { 
-            "title" : localStorage.getItem("rootElement"),
-            "id" : generateId(8),
-            "content" : ""
-        });
+    // Try and find a new note to make
+    //      Found it? Open the note in the editor and change it from a prelim note
+    //      to a proper note by adding it to the notes inside of LocalStorage
+    // Try and find an old note to edit
+    //      Found it? Set the ID as the current note and then open the note in the editor
+    // If you've found nothing, open the most recent note in the editor
 
-        output(null);
-    } else {
-        oldElementID = `${localStorage.getItem("loadNote")}`;
-        loadedElement = localStorage.getItem(oldElementID);
-        
-        window.editorwindow.value = loadedElement.content;
-        window.noteTitle = loadedElement.title;
-
-        output(null);
+    if (localStorage.getItem("editingNote") != undefined) {
+    
+        let currentNotes = JSON.parse(localStorage.getItem("notes"));
+        currentNotes.push(JSON.parse(localStorage.getItem("editingNote")));
+        localStorage.setItem("notes", JSON.stringify(currentNotes));
+        loadNote(JSON.parse(localStorage.getItem("editingNote")));
+        contentFound = true;
+    
+    } else if (localStorage.getItem("oldNote" != undefined) ) {
+    
+        notes = localStorage.getItem("notes");
+        for (let i in notes) {
+            if (i.id == localStorage.getItem("oldNote")) {
+                loadNote(i);
+                contentFound = true;
+            }
+        }
     }
 
-    // Regardless of whether we're editing a new note or an old note
-    // set the new note flag to 0
-    localStorage.setItem("newNote", "0");
+    // Reset the flags
+    localStorage.setItem("editingNote", undefined);
+    localStorage.setItem("oldNote", undefined);
+
+    if (contentFound == false) {
+        // If we haven't found anything to load, just load the most
+        // recent note stored in local storage
+
+        let notes = localStorage.getItem("notes");
+
+        if (notes == undefined || notes.length == 0) {
+            pageNotAvailable ();
+            return;
+        }
+
+        loadNote(notes[notes.length-1]);
+    }
+
 
     window.editorwindow.addEventListener("keydown", preventTab);
     window.editorwindow.addEventListener("keydown", handleNewLine);
+    window.editorwindow.addEventListener("keydown", saveContent);
     window.editorwindow.addEventListener("keyup", output);
     window.editorwindow.addEventListener("keyup", saveCursorPosition);
 
@@ -49,6 +70,26 @@ function start () {
     window.outdent.addEventListener ("click", outdentOnStartOfLine);
 
     window.editorwindow.addEventListener("blur", saveCursorPosition);
+}
+
+/**
+ * Loads a note object into both the UI and the editor
+ * @param {Note} note The note to be edited
+ */
+function loadNote (note) {
+    currentNoteID = note.id;
+    window.editorwindow.value = note.content; 
+    window.noteTitle.textContent = note.title;
+    output(null);
+}
+
+/**
+ * For whatever reason this page isn't valid, so show an error
+ * and then allow the user to go back to the main page
+ */
+function pageNotAvailable () {
+    alert("This page isn't valid");
+    return;
 }
 
 /**
@@ -61,6 +102,21 @@ function handleNewLine (e) {
     }
 
     
+}
+
+/**
+ * Everytime a key is pressed, make a copy of the document and save it to local storage
+ * @param {*} e 
+ */
+function saveContent (e) {
+    let notes = localStorage.getItem("notes");
+    for (let i in notes) {
+        if (i.id == currentNoteID) {
+            i.content = window.editorwindow.value;
+        }
+    }
+
+    localStorage.setItem("notes", JSON.stringify(notes));
 }
 
 /**
@@ -188,19 +244,4 @@ function splice (str, index, value) {
     let newArr2 = newArr1.concat(charsArr2);
 
     return newArr2;
-}
-
-/**
- * Generates a psuedo-random ID of a given length
- * @param {number} length The length of the ID to return
- */
-function generateId (length) {
-    const values = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-    let generatedId = [];
-
-    for (let i = 0; i < length; i++) {
-        generatedId.unshift(values[Math.floor(Math.random() * values.length)]);
-    }
-
-    return generatedId.join("");
 }
