@@ -1,30 +1,33 @@
 html, body {
-  padding: 0;
-  margin: 0;
   width: 100%;
   height: 100%;
+  padding: 0;
+  margin: 0;
 }
 
-#editorwindow {
-  border: 0;
-  border-right: 2px solid #000000;
-}
-
-.titlebar {
+.lrcontainer {
   width: 100%;
-  background-color: #000000;
-  color: #ffffff;
+  height: 100%;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-areas: "left right";
+  grid-template-columns: 75% 25%;
 }
-.titlebar * {
-  font-family: "Segoe UI Bold", Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 2em;
-  font-weight: 900;
-  padding: 10px;
+
+.left {
+  width: 100%;
+  height: 100%;
+  grid-area: "left";
+  height: 100%;
+  width: 100%;
 }
-.titlebar * .title {
-  font-family: "Segoe UI Light", Tahoma, Geneva, Verdana, sans-serif;
-  font-weight: 100;
-  font-size: 1em;
+
+.right {
+  width: 100%;
+  height: 100%;
+  grid-area: "right";
+  background-color: #242424;
 }
 
 /*# sourceMappingURL=test.css.map */
