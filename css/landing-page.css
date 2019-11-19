@@ -102,4 +102,13 @@ body, html {
   display: inline;
 }
 
+.oldNoteContainer {
+  background-color: #f5f5f5;
+}
+.oldNoteContainer .noteTitle {
+  font-size: 2em;
+  text-align: center;
+  border-bottom: 1px solid #242424;
+}
+
 /*# sourceMappingURL=landing-page.css.map */

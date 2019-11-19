@@ -103,10 +103,6 @@ body, html {
 
     font-size : 2em;
 
-    p {
-
-    }
-
     input {
         border : 0;
         border-bottom : 2px solid $black;
@@ -125,5 +121,25 @@ body, html {
     * {
         font-family: 'Segoe UI Bold', Tahoma, Geneva, Verdana, sans-serif;
         display : inline;
+    }
+}
+
+.oldNoteContainer {
+    background-color : $light;
+
+    .noteTitle {
+        font-size : 2em;
+        text-align : center;
+        border-bottom : 1px solid $dark;
+    }
+
+    .lrcontainer {
+        .datecreated {
+
+        }
+
+        .linesCount {
+            
+        }
     }
 }

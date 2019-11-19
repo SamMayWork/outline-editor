@@ -6,7 +6,8 @@ let rootElement = "";
 const settings = {
     "indent" : "Tab",
     "shiftForOutdent" : true,
-    "outdent" : "Tab"
+    "outdent" : "Tab",
+    "saveFrequency" : 1000
 }
 
 let currentNoteID = "";
@@ -32,9 +33,9 @@ function start () {
     
     } else if (localStorage.getItem("oldNote" != undefined) ) {
     
-        notes = localStorage.getItem("notes");
+        notes = JSON.parse(localStorage.getItem("notes"));
         for (let i in notes) {
-            if (i.id == localStorage.getItem("oldNote")) {
+            if (i.id == JSON.parse(localStorage.getItem("oldNote"))) {
                 loadNote(i);
                 contentFound = true;
             }
@@ -62,7 +63,6 @@ function start () {
 
     window.editorwindow.addEventListener("keydown", preventTab);
     window.editorwindow.addEventListener("keydown", handleNewLine);
-    window.editorwindow.addEventListener("keydown", saveContent);
     window.editorwindow.addEventListener("keyup", output);
     window.editorwindow.addEventListener("keyup", saveCursorPosition);
 
@@ -70,6 +70,9 @@ function start () {
     window.outdent.addEventListener ("click", outdentOnStartOfLine);
 
     window.editorwindow.addEventListener("blur", saveCursorPosition);
+
+    // Set the auto-saver
+    setInterval(saveContent, settings.saveFrequency);
 }
 
 /**
@@ -100,17 +103,15 @@ function handleNewLine (e) {
     if (e.key != "Enter") {
         return;
     }
-
-    
 }
 
 /**
- * Everytime a key is pressed, make a copy of the document and save it to local storage
- * @param {*} e 
+ * Every specified unit of time (in the settings) this functions saves the content
+ * of the document to the local storage on the device
  */
-function saveContent (e) {
-    let notes = localStorage.getItem("notes");
-    for (let i in notes) {
+function saveContent () {
+    let notes = JSON.parse(localStorage.getItem("notes"));
+    for (let i of notes) {
         if (i.id == currentNoteID) {
             i.content = window.editorwindow.value;
         }
