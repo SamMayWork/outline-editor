@@ -9,9 +9,9 @@ const specChars = {
         { "md" : "_", "html" : "<em>", "ehtml" : "</em>" }
     ],
 
-    "optionalChars" : [
-        { "bullet" : "-" }
-    ]
+    "optionalChars" : {
+        "bullet" : "-"
+    }
 }
 
 /**
@@ -133,7 +133,7 @@ function processBulletPoints (str) {
     }
 
     if (bulletIndex > 0) {
-        return splice(str, bulletIndex, "-");
+        return splice(str, bulletIndex, specChars.optionalChars.bullet);
     } else {
         return str;
     }
