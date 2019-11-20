@@ -41,6 +41,18 @@ function makeNewNote (e) {
 }
 
 /**
+ * Checks the local storage to see if there's any load old notes to display
+ * on the right hand side of the interface
+ */
+function loadOldNotes () {
+    if (localStorage.getItem("notes") == undefined) {
+        return;
+    }
+
+    let notes = JSON.parse(localStorage.getItem("notes"));
+}
+
+/**
  * Generates a psuedo-random ID of a given length
  * @param {number} length The length of the ID to return
  */
