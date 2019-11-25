@@ -50,6 +50,22 @@ function loadOldNotes () {
     }
 
     let notes = JSON.parse(localStorage.getItem("notes"));
+
+    for (let i of notes) {
+        
+    }
+}
+
+/**
+ * Generates all of the quicklinks on the side of the page to all of the previous loaded notes
+ */
+function showOldNotes () {
+    const oldNotes = JSON.parse(localStorage.getItem("notes"));
+    for (let note in oldNotes) {
+        const template = document.querySelector("#oldNoteContainer");
+        const clonedItem = template.importNode(template.content, true);
+        window.prevControls.appendChild(clonedItem);
+    }
 }
 
 /**
