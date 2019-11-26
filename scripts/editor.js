@@ -71,8 +71,15 @@ function start () {
 
     window.editorwindow.addEventListener("blur", saveCursorPosition);
 
+    window.logo.addEventListener("click", visitHomePage);
+
     // Set the auto-saver
     setInterval(saveContent, settings.saveFrequency);
+}
+
+function visitHomePage (e) {
+    // Redirect the user to the home page
+    window.open("index.html", "_self", false);
 }
 
 /**

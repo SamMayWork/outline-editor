@@ -13,6 +13,10 @@ html, body {
     height : 100%;
 }
 
+#logo {
+    cursor : pointer;
+}
+
 .window-container {
     @include fill;
 

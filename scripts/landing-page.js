@@ -1,4 +1,4 @@
-const devTools = true;
+const devTools = false;
 
 function start () {
 
@@ -13,6 +13,8 @@ function start () {
     }
 
     window.newnote.addEventListener("click", makeTitleInputVisible);
+
+    showOldNotes();
 
     // When the new note button is clicked, make all of the note in
     // local storage and then open it inside of the editor
@@ -34,26 +36,11 @@ function makeNewNote (e) {
     localStorage.setItem("editingNote", JSON.stringify({
         "title" : window.rootElement.value,
         "content" : "",
-        id : generateId(8)
+        "id" : generateId(8), 
+        "dateCreated" : new Date().toDateString()
     }));
 
     window.open("editor.html", "_self", false);
-}
-
-/**
- * Checks the local storage to see if there's any load old notes to display
- * on the right hand side of the interface
- */
-function loadOldNotes () {
-    if (localStorage.getItem("notes") == undefined) {
-        return;
-    }
-
-    let notes = JSON.parse(localStorage.getItem("notes"));
-
-    for (let i of notes) {
-        
-    }
 }
 
 /**
@@ -61,10 +48,18 @@ function loadOldNotes () {
  */
 function showOldNotes () {
     const oldNotes = JSON.parse(localStorage.getItem("notes"));
-    for (let note in oldNotes) {
+    
+    if (oldNotes == undefined || oldNotes.length == 0) { return; }
+
+    for (let note of oldNotes) {
         const template = document.querySelector("#oldNoteContainer");
-        const clonedItem = template.importNode(template.content, true);
-        window.prevControls.appendChild(clonedItem);
+        const clonedItem = document.importNode(template.content, true);
+
+        clonedItem.querySelector(".noteTitle").textContent = note.title;
+        clonedItem.querySelector(".dateCreated").textContent = note.dateCreated;
+        clonedItem.querySelector(".linesCount").textContent = note.content.split("\n").length;
+
+        document.querySelector(".prevControls").appendChild(clonedItem);
     }
 }
 
