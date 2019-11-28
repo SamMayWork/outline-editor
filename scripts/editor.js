@@ -3,6 +3,8 @@
 let cursorPosition = 0;
 let rootElement = "";
 
+let drawingCtx;
+
 const settings = {
     "indent" : "Tab",
     "shiftForOutdent" : true,
@@ -13,6 +15,8 @@ const settings = {
 let currentNoteID = "";
 
 function start () {
+
+    drawingCtx = window.lineHighlightCanvas.getContext("2d");
 
     let contentFound = false;
 
@@ -75,6 +79,14 @@ function start () {
 
     // Set the auto-saver
     setInterval(saveContent, settings.saveFrequency);
+}
+
+/**
+ * Highlights the selected line in the text area
+ * @param {*} e 
+ */
+function updateSelectedLineHighlighting (e) {
+    // TODO Clear the canvas
 }
 
 function visitHomePage (e) {
