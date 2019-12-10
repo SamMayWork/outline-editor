@@ -1,4 +1,4 @@
-const devTools = false;
+const devTools = true;
 
 function start () {
 
@@ -31,7 +31,9 @@ function makeTitleInputVisible (e) {
  * Makes a new note object in localstorage
  */
 function makeNewNote (e) {
-    if (e.key != "Enter") return;
+
+    if (e.type != "click" && e.type != "keydown") { return; }
+    if (e.type == "keydown" && e.key != "Enter") { return; }
 
     localStorage.setItem("editingNote", JSON.stringify({
         "title" : window.rootElement.value,
