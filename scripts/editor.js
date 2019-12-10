@@ -175,6 +175,7 @@ function indentOnStartOfLine (e) {
     if(cursorPosition <= rootElement.length) {
         return;
     }
+    
     window.editorwindow.value = getRowsToSelection().join("\n") + "\n\t" + getSelectedRow() + getPostSelectionRows().join("\n");
 
     cursorPosition += 1;
