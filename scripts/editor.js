@@ -161,7 +161,7 @@ function saveCursorPosition () {
  * @param {*} e 
  */
 function outdentOnStartOfLine (e) {
-    const currentRow = outdentLine(getSelectedRow());
+    const currentRow = outdentString(getSelectedRow());
     window.editorwindow.value = getRowsToSelection().join("\n") + "\n" + currentRow + getPostSelectionRows().join("\n")
     cursorPosition -= 1;
     output(null);
@@ -175,39 +175,14 @@ function indentOnStartOfLine (e) {
     if(cursorPosition <= rootElement.length) {
         return;
     }
-    
-    window.editorwindow.value = getRowsToSelection().join("\n") + "\n\t" + getSelectedRow() + getPostSelectionRows().join("\n");
+
+    window.editorwindow.value = getRowsToSelection().join("\n") + indentString(getSelectedRow()) + getPostSelectionRows().join("\n");
 
     cursorPosition += 1;
     output(null);
 }
 
-/**
- * Returns the entire content of the selected row
- */
-function getSelectedRow () {
-    let content = window.editorwindow.value;
-    content = content.replace(getRowsToSelection().join("\n"), "");
-    content = content.replace(getPostSelectionRows().join("\n"), "");
-    return content.replace("\n", "");
-}
 
-/**
- * Gets an array of all the rows after the selected line
- */
-function getPostSelectionRows () {
-    const allRows = window.editorwindow.value.split("\n");
-    const rowCountBeforeSelection = getRowsToSelection().length;
-    return allRows.slice(rowCountBeforeSelection).slice(1);
-}
-
-/**
- * Gets an array of all the rows of content up to the selected line
- */
-function getRowsToSelection () {
-    const rows = window.editorwindow.value.substring(0, cursorPosition).split("\n");
-    return rows.slice(0, rows.length-1);
-}
 
 /**
  * Prevents the user being able to switch focus while editing text
@@ -236,11 +211,52 @@ function preventTab (e) {
     e.preventDefault();
 }
 
+//#region content getters
+
+/**
+ * Returns the entire content of the selected row
+ */
+function getSelectedRow () {
+    let content = window.editorwindow.value;
+    content = content.replace(getRowsToSelection().join("\n"), "");
+    content = content.replace(getPostSelectionRows().join("\n"), "");
+    return content.replace("\n", "");
+}
+
+/**
+ * Gets an array of all the rows after the selected line
+ */
+function getPostSelectionRows () {
+    const allRows = window.editorwindow.value.split("\n");
+    const rowCountBeforeSelection = getRowsToSelection().length + 1;
+    return allRows.slice(rowCountBeforeSelection);
+}
+
+/**
+ * Gets an array of all the rows of content up to (but not including) the selected line
+ */
+function getRowsToSelection () {
+    const rows = window.editorwindow.value.substring(0, cursorPosition).split("\n");
+    return rows.slice(0, rows.length-1);
+}
+
+//#endregion
+
+//#region Indent/Outdent
+
+/**
+ * Adds an indent to the start of a line
+ * @param {string} str The string to have an indent added to
+ */
+function indentString (str) {
+    return `\t${str}`;
+}
+
 /**
  * Removes a tab character from the start of a string
  * @param {string} str String to outdent 
  */
-function outdentLine (str) {
+function outdentString (str) {
     const strA = str.split("");
     let revChar = strA.shift();
 
@@ -251,18 +267,4 @@ function outdentLine (str) {
     return strA.join("");
 }
 
-/**
- * Splices a string with the provided value
- * @param {string} str String to splice into
- * @param {number} index Index to splice into
- * @param {string} value Value to be spliced into the string
- */
-function splice (str, index, value) {
-    let charsArr1 = str.slice(0, index);
-    let charsArr2 = str.slice(index, str.length);
-
-    let newArr1 = charsArr1.concat(value.split(","));
-    let newArr2 = newArr1.concat(charsArr2);
-
-    return newArr2;
-}
+//#endregion
