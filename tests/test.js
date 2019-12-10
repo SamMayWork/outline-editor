@@ -57,3 +57,17 @@ QUnit.test("indent string", function (assert) {
     assert.equal(indentString("This is a string"), "\tThis is a string");
     assert.equal(indentString("\t\t\tThis is a string"), "\t\t\t\tThis is a string");
 });
+
+QUnit.test("Switching line positions", function (assert) {
+    let x = document.createElement("textarea");
+    x.value = "1\n2\n3";
+
+    changeLinePosition(1, true, x);
+    assert.equal(x.value, "2\n1\n3");
+
+    changeLinePosition(0, true, x);
+    assert.equal(x.value, "2\n1\n3");
+
+    changeLinePosition(0, false, x);
+    assert.equal(x.value, "1\n2\n3");
+});

@@ -12,7 +12,7 @@
         <div class="new-controls">
             <div class="title-container">
                 <h1>Outline-editor</h1>
-                <h2>The outline text-editor.</h2>
+                <h2>The wildly over-engineered outline text-editor.</h2>
             </div>
             <div id="button-container">
                 <button id="newnote">New Note</button>
@@ -26,12 +26,15 @@
         </div>
         <div class="prevControls">
             <template id="oldNoteContainer">
-                <p class="noteTitle"></p>
-                <div class="lrcontainer">
-                    <p class="dateCreated"></p>
-                    <p class="linesCount"></p>
+                <div class="oldNote">    
+                    <p class="noteTitle"></p>
+                    <p class="contentpreview"></p>
+                    <div class="lrcontainer">
+                        <p class="dateCreated"></p>
+                        <p class="linesCount"></p>
+                    </div>
+                    <button href="">Edit</button>
                 </div>
-                <button href="">Edit</button>
             </template>
         </div>
     </div>

@@ -57,9 +57,11 @@ function showOldNotes () {
         const template = document.querySelector("#oldNoteContainer");
         const clonedItem = document.importNode(template.content, true);
 
+        clonedItem.id = "";
         clonedItem.querySelector(".noteTitle").textContent = note.title;
         clonedItem.querySelector(".dateCreated").textContent = note.dateCreated;
-        clonedItem.querySelector(".linesCount").textContent = note.content.split("\n").length;
+        clonedItem.querySelector(".contentPreview").textContent = note.content.substring(0, 50) + "...";
+        clonedItem.querySelector(".linesCount").textContent = `Lines: ${note.content.split("\n").length}`;
 
         document.querySelector(".prevControls").appendChild(clonedItem);
     }

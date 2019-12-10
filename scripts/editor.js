@@ -219,10 +219,12 @@ function preventTab (e) {
  */
 function changeLinePosition (lineNumber, moveUp, textArea) {
     if (lineNumber < 0 || lineNumber > textArea.value.split("\n").length) { return; }
+    if (lineNumber == 0 && moveUp == true) { return; }
+    if (lineNumber == textArea.value.split("\n").length && moveUp == false) { return; }
 
     // Swap the indexes of the lines and then push back onto the text area
 
-    let allLines = getAllContent();
+    let allLines = textArea.value.split("\n");
     let tmp = allLines[lineNumber];
     
     if (moveUp) {
@@ -233,7 +235,7 @@ function changeLinePosition (lineNumber, moveUp, textArea) {
         allLines[lineNumber+1] = tmp;
     }
 
-    textArea.value = allLines.join("");
+    textArea.value = allLines.join("\n");
 }
 
 //#region content getters

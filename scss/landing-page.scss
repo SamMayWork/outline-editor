@@ -9,10 +9,6 @@ body, html {
     font-family: 'Segoe UI Light', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-#oldNoteContainer {
-    
-}
-
 .grid-container {
     width : 100%;
     height : 100%;
@@ -29,10 +25,10 @@ body, html {
     height : 100%;
 }
 
-.prev-controls {
+.prevControls {
     grid-area : "oldNotes";
 
-    background-color : $dark;
+    border-left : 5px solid black;
 
     width : 100%;
     height : 100%;
@@ -128,8 +124,16 @@ body, html {
     }
 }
 
-.oldNoteContainer {
-    background-color : $dark;
+.oldNote {
+
+    border-radius : 10px;
+    border : 2px solid black;
+    padding : 0.5em;
+    margin : 0.9em;
+
+    .contentPreview {
+        overflow : hidden;
+    }
 
     .noteTitle {
         font-size : 2em;
@@ -140,6 +144,10 @@ body, html {
     .lrcontainer {
         display : flex;
 
+        * {
+            text-align : center;
+        }
+
         .dateCreated {
             flex : 1;
         }
@@ -147,5 +155,9 @@ body, html {
         .linesCount {
             flex : 1;
         }
+    }
+
+    button {
+        width : 100%;
     }
 }
