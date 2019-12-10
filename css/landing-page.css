@@ -103,12 +103,21 @@ body, html {
 }
 
 .oldNoteContainer {
-  background-color: #f5f5f5;
+  background-color: #242424;
 }
 .oldNoteContainer .noteTitle {
   font-size: 2em;
   text-align: center;
   border-bottom: 1px solid #242424;
+}
+.oldNoteContainer .lrcontainer {
+  display: flex;
+}
+.oldNoteContainer .lrcontainer .dateCreated {
+  flex: 1;
+}
+.oldNoteContainer .lrcontainer .linesCount {
+  flex: 1;
 }
 
 /*# sourceMappingURL=landing-page.css.map */

@@ -129,7 +129,7 @@ body, html {
 }
 
 .oldNoteContainer {
-    background-color : $light;
+    background-color : $dark;
 
     .noteTitle {
         font-size : 2em;
@@ -138,12 +138,14 @@ body, html {
     }
 
     .lrcontainer {
-        .datecreated {
+        display : flex;
 
+        .dateCreated {
+            flex : 1;
         }
 
         .linesCount {
-            
+            flex : 1;
         }
     }
 }
