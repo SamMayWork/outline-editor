@@ -1,11 +1,4 @@
 QUnit.module("text-parser");
-QUnit.test("splice test", function (assert) {
-    assert.equal(splice("Hello, world!", 0, "Hi"), "HiHello, world!");
-    assert.equal(splice("Hello, world!", 1, "Hi"), "HHiello, world!");
-    assert.equal(splice("Hello, world!", 8, "Hi"), "Hello, wHiorld!");
-    assert.equal(splice("Hello, world!", -1, "Hi"), undefined);
-    assert.equal(splice("Hello, world!", 14, "Hi"), undefined);
-});
 
 QUnit.test("bullet test", function (assert) {
     assert.equal(processBulletPoints("\t\tThis is a string"), "\t\t-This is a string");
@@ -40,4 +33,27 @@ QUnit.test ("overall conversion test", function (assert) {
     let newTextArea = document.createElement("textarea");
     interpretContent("#This is a title\n\t\tThis is also a test", newTextArea);
     assert.equal(newTextArea.value, "<h1>This is a title</h1><br>            -This is also a test");
+});
+
+QUnit.module("common");
+
+QUnit.test("splice test", function (assert) {
+    assert.equal(splice("Hello, world!", 0, "Hi"), "HiHello, world!");
+    assert.equal(splice("Hello, world!", 1, "Hi"), "HHiello, world!");
+    assert.equal(splice("Hello, world!", 8, "Hi"), "Hello, wHiorld!");
+    assert.equal(splice("Hello, world!", -1, "Hi"), undefined);
+    assert.equal(splice("Hello, world!", 14, "Hi"), undefined);
+});
+
+QUnit.module("editor");
+
+QUnit.test("outdent string", function (assert) {
+    assert.equal(outdentString("\tThis is some content"), "This is some content");
+    assert.equal(outdentString("This is some content"), "This is some content");
+    assert.equal(outdentString("\t\t\tThis is some content"), "\t\tThis is some content");
+});
+
+QUnit.test("indent string", function (assert) {
+    assert.equal(indentString("This is a string"), "\tThis is a string");
+    assert.equal(indentString("\t\t\tThis is a string"), "\t\t\t\tThis is a string");
 });
