@@ -4,7 +4,7 @@
 const specChars = {
     "chars" : [
         { "md" : "\t", "html" : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', "ehtml" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" },
-        { "md" : "\n", "html" : '<br>' },
+        { "md" : "\n", "html" : '<br>'},
         { "md" : "*", "html" : "<strong>", "ehtml" : "</strong>" },
         { "md" : "_", "html" : "<em>", "ehtml" : "</em>" }
     ],
@@ -77,7 +77,7 @@ function convertMdToHTML(str) {
 }
 
 /**
- * Escapes a string of all angle brackets by replacing them with whitespace
+ * Escapes a string of all angle brackets by replacing them with nothing
  * @param {String} str The string to remove angle brackets from 
  */
 function escapeStrings (str) {
@@ -97,7 +97,7 @@ function escapeStrings (str) {
 }
 
 /**
- * Converts all hashes into HTML headings
+ * Converts all markdown headings into proper HTML headings
  * @param {String} str 
  */
 function processHeadings (str) {
@@ -120,10 +120,13 @@ function processHeadings (str) {
 }
 
 /**
- * Processes bullet points for a given line
+ * For a given string, inserts the chosen bullet character after all tabs
  * @param {*} str 
  */
 function processBulletPoints (str) {
+
+    // Iterate through, find the index after all of the tabs and insert
+    // the chosen tab character
     let bulletIndex = 0;
     for (let i = 0; i < str.length; i++) {
         if (str[i] != "\t") {
@@ -146,6 +149,9 @@ function processBulletPoints (str) {
  * @param {string} value Value to be spliced into the string
  */
 function splice (str, index, value) {
+
+    if (index > str.length || index < 0) { return undefined; }
+
     let charsArr1 = str.slice(0, index);
     let charsArr2 = str.slice(index, str.length);
 
