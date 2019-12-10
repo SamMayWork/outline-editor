@@ -1,4 +1,4 @@
-const devTools = true;
+const devTools = false;
 
 function start () {
 

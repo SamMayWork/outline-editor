@@ -211,7 +211,39 @@ function preventTab (e) {
     e.preventDefault();
 }
 
+/**
+ * Moves a given line in a text area up or down
+ * @param {number} lineNumber The number of the line to move
+ * @param {boolean} moveUp Indicates if the line should be moved up or down
+ * @param {TextArea} textArea The textarea to move the line inside of
+ */
+function changeLinePosition (lineNumber, moveUp, textArea) {
+    if (lineNumber < 0 || lineNumber > textArea.value.split("\n").length) { return; }
+
+    // Swap the indexes of the lines and then push back onto the text area
+
+    let allLines = getAllContent();
+    let tmp = allLines[lineNumber];
+    
+    if (moveUp) {
+        allLines[lineNumber] = allLines[lineNumber-1];
+        allLines[lineNumber-1] = tmp;
+    } else {
+        allLines[lineNumber] = allLines[lineNumber+1];
+        allLines[lineNumber+1] = tmp;
+    }
+
+    textArea.value = allLines.join("");
+}
+
 //#region content getters
+
+/**
+ * Returns the number index of the selected row
+ */
+function getSelectedRowNumber () {
+    return window.editorwindow.value.substring(0, cursorPosition).split("\n").length;
+}
 
 /**
  * Returns the entire content of the selected row
@@ -238,6 +270,10 @@ function getPostSelectionRows () {
 function getRowsToSelection () {
     const rows = window.editorwindow.value.substring(0, cursorPosition).split("\n");
     return rows.slice(0, rows.length-1);
+}
+
+function getAllContent ()  {
+    return window.editorwindow.value.split("\n");
 }
 
 //#endregion
