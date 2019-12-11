@@ -72,16 +72,11 @@ function start () {
 
     window.logo.addEventListener("click", visitHomePage);
 
+    window.lineUp.addEventListener("click", moveLineUp);
+    window.lineDown.addEventListener("click", moveLineDown);
+
     // Set the auto-saver
     setInterval(saveContent, settings.saveFrequency);
-}
-
-/**
- * Highlights the selected line in the text area
- * @param {*} e 
- */
-function updateSelectedLineHighlighting (e) {
-    // TODO Clear the canvas
 }
 
 function visitHomePage (e) {
@@ -98,25 +93,6 @@ function loadNote (note) {
     window.editorwindow.value = note.content; 
     window.noteTitle.textContent = note.title;
     output(null);
-}
-
-/**
- * For whatever reason this page isn't valid, so show an error
- * and then allow the user to go back to the main page
- */
-function pageNotAvailable () {
-    alert("This page isn't valid");
-    return;
-}
-
-/**
- * Handle for a new line being entered
- * @param {*} e 
- */
-function handleNewLine (e) {
-    if (e.key != "Enter") {
-        return;
-    }
 }
 
 /**
@@ -206,40 +182,13 @@ function preventTab (e) {
     e.preventDefault();
 }
 
-/**
- * Moves a given line in a text area up or down
- * @param {number} lineNumber The number of the line to move
- * @param {boolean} moveUp Indicates if the line should be moved up or down
- * @param {TextArea} textArea The textarea to move the line inside of
- */
-function changeLinePosition (lineNumber, moveUp, textArea) {
-    if (lineNumber < 0 || lineNumber > textArea.value.split("\n").length) { return; }
-    if (lineNumber == 0 && moveUp == true) { return; }
-    if (lineNumber == textArea.value.split("\n").length && moveUp == false) { return; }
-
-    // Swap the indexes of the lines and then push back onto the text area
-
-    let allLines = textArea.value.split("\n");
-    let tmp = allLines[lineNumber];
-    
-    if (moveUp) {
-        allLines[lineNumber] = allLines[lineNumber-1];
-        allLines[lineNumber-1] = tmp;
-    } else {
-        allLines[lineNumber] = allLines[lineNumber+1];
-        allLines[lineNumber+1] = tmp;
-    }
-
-    textArea.value = allLines.join("\n");
-}
-
 //#region content getters
 
 /**
  * Returns the number index of the selected row
  */
 function getSelectedRowNumber () {
-    return window.editorwindow.value.substring(0, cursorPosition).split("\n").length;
+    return window.editorwindow.value.substring(0, cursorPosition).split("\n").length -1;
 }
 
 /**
@@ -269,6 +218,9 @@ function getRowsToSelection () {
     return rows.slice(0, rows.length-1);
 }
 
+/**
+ * Gets all of the content from the editor window
+ */
 function getAllContent ()  {
     return window.editorwindow.value.split("\n");
 }
@@ -298,6 +250,51 @@ function outdentString (str) {
     }
 
     return strA.join("");
+}
+
+//#endregion
+
+//#region Line Movement
+
+/**
+ * Moves a given line in a text area up or down
+ * @param {number} lineNumber The number of the line to move
+ * @param {boolean} moveUp Indicates if the line should be moved up or down
+ * @param {TextArea} textArea The textarea to move the line inside of
+ */
+function changeLinePosition (lineNumber, moveUp, textArea) {
+    if (lineNumber < 0 || lineNumber > textArea.value.split("\n").length) { return; }
+    if (lineNumber == 0 && moveUp == true) { return; }
+    if (lineNumber == textArea.value.split("\n").length && moveUp == false) { return; }
+
+    // Swap the indexes of the lines and then push back onto the text area
+
+    let allLines = textArea.value.split("\n");
+    let tmp = allLines[lineNumber];
+    
+    if (moveUp) {
+        allLines[lineNumber] = allLines[lineNumber-1];
+        allLines[lineNumber-1] = tmp;
+    } else {
+        allLines[lineNumber] = allLines[lineNumber+1];
+        allLines[lineNumber+1] = tmp;
+    }
+
+    textArea.value = allLines.join("\n");
+}
+
+/**
+ * Handle for the line being moved up event
+ */
+function moveLineUp () {
+    changeLinePosition(getSelectedRowNumber(), true, window.editorwindow);
+}
+
+/**
+ * Handle for the line being moved down event
+ */
+function moveLineDown () {
+    changeLinePosition(getSelectedRowNumber(), false, window.editorwindow);
 }
 
 //#endregion
