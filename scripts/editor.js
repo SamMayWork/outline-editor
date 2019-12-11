@@ -3,8 +3,6 @@
 let cursorPosition = 0;
 let rootElement = "";
 
-let drawingCtx;
-
 const settings = {
     "indent" : "Tab",
     "shiftForOutdent" : true,
@@ -15,9 +13,6 @@ const settings = {
 let currentNoteID = "";
 
 function start () {
-
-    drawingCtx = window.lineHighlightCanvas.getContext("2d");
-
     let contentFound = false;
 
     // Try and find a new note to make

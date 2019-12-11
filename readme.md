@@ -2,13 +2,15 @@
 
 ### UP891153 - Application Engineering Coursework Submission
 
-Oedit is an outline editor, that focuses on being keyboard friendly.
+Oedit is an outline editor, that tries to be keyboard-friendly.
 
-SASS (Syntactically Awesome Style Sheets)
-    - A way of organising style sheets in a similar way to HTML, which cuts down on the amount of time spent making CSS Selectors
 
 
 ### Technical Explantions
+
+#### So how does it work?
+
+OEdit primarily runs on a static express server, saving all of its associated files and content to the local storage of the device it's being used on. _This is defintely not a perfect solution, but it works for now, and it can be improved in the future._ OEdit does however, have a backend server that can be used to share notes with other people; this works by sending a POST to the API with all of the note content which is then stored into the database. The Server then generates a random string to host the note on and then binds it to that URL, so that anyone with that URL can access it and view the contents.
 
 #### So what's in LocalStorage?
 
