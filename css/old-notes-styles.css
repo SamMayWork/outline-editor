@@ -1,0 +1,64 @@
+* {
+  font-family: "Segoe UI Light", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+  font-family: "Segoe UI Bold", Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+}
+
+.control-container {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 0.25em #000000;
+  margin-bottom: 1em;
+}
+.control-container * {
+  flex: 1;
+  font-size: 2em;
+  font-family: "Segoe UI Bold", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+}
+.control-container h1 {
+  text-align: right;
+}
+
+.oldNoteContainer {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.oldNoteContainer * {
+  flex: 1;
+}
+.oldNoteContainer .oldNote {
+  border: 2px solid black;
+  padding: 0.5em;
+  margin: 0.9em;
+  min-width: 20%;
+}
+.oldNoteContainer .oldNote .contentPreview {
+  overflow: hidden;
+}
+.oldNoteContainer .oldNote .noteTitle {
+  font-size: 2em;
+  text-align: center;
+  border-bottom: 1px solid #242424;
+}
+.oldNoteContainer .oldNote .lrcontainer {
+  display: flex;
+}
+.oldNoteContainer .oldNote .lrcontainer * {
+  text-align: center;
+}
+.oldNoteContainer .oldNote .lrcontainer .dateCreated {
+  flex: 1;
+}
+.oldNoteContainer .oldNote .lrcontainer .linesCount {
+  flex: 1;
+}
+.oldNoteContainer .oldNote button {
+  width: 100%;
+}
+
+/*# sourceMappingURL=old-notes-styles.css.map */

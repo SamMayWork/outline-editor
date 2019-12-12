@@ -13,17 +13,31 @@ const settings = {
 let currentNoteID = "";
 
 function start () {
-    let contentFound = false;
+    // When the editor loads, it attempts to find a note to edit inside of the editing note part
+    // of localstorage. It then checks to see if the flag for it being an old note have been set, 
+    // if it's a new note, it pushes it into the notes section of localstorage, otherwise it just edits
+    // the pre-existing note
 
-    // Try and find a new note to make
-    //      Found it? Open the note in the editor and change it from a prelim note
-    //      to a proper note by adding it to the notes inside of LocalStorage
-    // Try and find an old note to edit
-    //      Found it? Set the ID as the current note and then open the note in the editor
-    // If you've found nothing, open the most recent note in the editor
+    const editingNote = JSON.parse(localStorage.getItem("editingnote"));
+    const oldFlag = JSON.parse(localStorage.getItem("oldFlag"));
 
-    if (localStorage.getItem("editingNote") != undefined) {
-    
+    if (editingNote == undefined) {
+        window.open("404.html", "_self", false);
+        return;
+    }
+
+    if (oldFlag == false) {
+        let currentNotes = JSON.parse(localStorage.getItem("notes"));
+        currentNotes.push(JSON.parse(editingNote));
+        localStorage.setItem("notes", JSON.stringify(currentNotes));    
+    } 
+
+    loadNote(editingNote);
+
+
+    /*
+
+    if (localStorage.getItem("editingNote") != undefined) {    
         let currentNotes = JSON.parse(localStorage.getItem("notes"));
         currentNotes.push(JSON.parse(localStorage.getItem("editingNote")));
         localStorage.setItem("notes", JSON.stringify(currentNotes));
@@ -41,25 +55,9 @@ function start () {
         }
     }
 
-    // Reset the flags
-    localStorage.setItem("editingNote", undefined);
-    localStorage.setItem("oldNote", undefined);
+    */
 
-    if (contentFound == false) {
-        // If we haven't found anything to load, just load the most
-        // recent note stored in local storage
-
-        let notes = localStorage.getItem("notes");
-
-        if (notes == undefined || notes.length == 0) {
-            pageNotAvailable ();
-            return;
-        }
-
-        loadNote(notes[notes.length-1]);
-    }
-
-
+    //#region Event Listeners
     window.editorwindow.addEventListener("keydown", preventTab);
     window.editorwindow.addEventListener("keydown", handleNewLine);
     window.editorwindow.addEventListener("keyup", output);
@@ -74,6 +72,8 @@ function start () {
 
     window.lineUp.addEventListener("click", moveLineUp);
     window.lineDown.addEventListener("click", moveLineDown);
+
+    //#endregion
 
     // Set the auto-saver
     setInterval(saveContent, settings.saveFrequency);

@@ -1,0 +1,79 @@
+@import "_common.scss";
+
+* {
+    font-family : $standard-font-stack;
+}
+
+h1 {
+    font-family : 'Segoe UI Bold', Tahoma, Geneva, Verdana, sans-serif;
+    text-align : center;
+}
+
+.control-container {
+    display : flex;
+    justify-content : space-between;
+    
+    * {
+        flex : 1;
+        font-size : 2em;
+        font-family: $standard-font-stack-bold;
+        margin : 0;
+    }
+
+    h1 {
+        text-align : right;
+    }
+
+    border-bottom : 0.25em $black;
+    margin-bottom : 1em;
+}
+
+.oldNoteContainer {
+    display : flex;
+    flex-wrap : wrap;
+
+    width : 100%;
+
+    * {
+        flex : 1;
+    }
+
+    .oldNote {
+
+        border : 2px solid black;
+        padding : 0.5em;
+        margin : 0.9em;
+        
+        min-width : 20%;
+
+        .contentPreview {
+            overflow : hidden;
+        }
+    
+        .noteTitle {
+            font-size : 2em;
+            text-align : center;
+            border-bottom : 1px solid $dark;
+        }
+    
+        .lrcontainer {
+            display : flex;
+    
+            * {
+                text-align : center;
+            }
+    
+            .dateCreated {
+                flex : 1;
+            }
+    
+            .linesCount {
+                flex : 1;
+            }
+        }
+    
+        button {
+            width : 100%;
+        }
+    }
+}
