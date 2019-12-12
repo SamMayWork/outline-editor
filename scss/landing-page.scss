@@ -14,15 +14,20 @@ body, html {
     height : 100%;
 
     display : grid;
-    grid-template-areas: "newNote oldNotes";
+    grid-template-areas: "landing oldNotes";
     grid-template-columns: 75% 25%;
 }
 
 .new-controls {
-    grid-area : "newNote";
+    grid-area : "landing";
 
     width : 100%;
     height : 100%;
+
+    .innercontainer {
+        margin-right : 5em;
+        margin-left : 5em;
+    }
 }
 
 .prevControls {
@@ -84,43 +89,34 @@ body, html {
 }
 
 #notecontainer {
-    transition : all 1s ease-in;
-
     display : none;
-
-    position : absolute;
-
-    bottom : 0px;
-    right : 50%;
-    transform : translateX(50%);
-
-    margin-bottom : 4.4em;
-
+    margin-top : 2em;
     border : 2px solid $black;
-    border-radius : 5px;
+    padding : 1em;
 
-    padding : 20px;
+    * {
+        font-family: $standard-font-stack-bold;
+        font-size : 1.5em;
+    }
 
-    font-size : 2em;
+    .flex-container {
+        display : flex;
+    }
+
+    p {
+        flex : 1;
+    }
 
     input {
         border : 0;
-        border-bottom : 2px solid $black;
-        font-size : 1.5em;
-        max-width : 20vw;
+        border-bottom : 0.25em solid black;
+        flex : 4;
     }
 
     button {
+        flex : 1;
         background-color : $white;
-        border-radius : 5px;
-        border : 2px solid $black;
-        padding : 4px;
-        font-size : 1.2em;
-    }
-
-    * {
-        font-family: 'Segoe UI Bold', Tahoma, Geneva, Verdana, sans-serif;
-        display : inline;
+        color : $black;
     }
 }
 

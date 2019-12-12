@@ -10,18 +10,22 @@
 <body onload="start();">
     <div class="grid-container">
         <div class="new-controls">
-            <div class="title-container">
-                <h1>OEdit.</h1>
-                <h2>The wildly over-engineered outline text-editor.</h2>
-            </div>
-            <div id="button-container">
-                <button id="newnote">New Note</button>
-                <a href="">View Source</a>
-            </div>
-            <div id="notecontainer">
-                <p>Note Title</p>
-                <input type="text" id=rootElement>
-                <button id="go">Go</button>
+            <div class="innercontainer">
+                <div class="title-container">
+                    <h1>OEdit.</h1>
+                    <h2>The wildly over-engineered outline text-editor.</h2>
+                </div>
+                <div id="button-container">
+                    <button id="newnote">New Note</button>
+                    <a href="old.html">View Old Notes</a>
+                </div>
+                <div id="notecontainer">
+                    <div class="flex-container">
+                        <p>Note Title:</p>
+                        <input type="text" id=rootElement>
+                        <button id="go">Go</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="prevControls">

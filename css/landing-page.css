@@ -10,14 +10,18 @@ body, html {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-areas: "newNote oldNotes";
+  grid-template-areas: "landing oldNotes";
   grid-template-columns: 75% 25%;
 }
 
 .new-controls {
-  grid-area: "newNote";
+  grid-area: "landing";
   width: 100%;
   height: 100%;
+}
+.new-controls .innercontainer {
+  margin-right: 5em;
+  margin-left: 5em;
 }
 
 .prevControls {
@@ -72,34 +76,30 @@ body, html {
 }
 
 #notecontainer {
-  transition: all 1s ease-in;
   display: none;
-  position: absolute;
-  bottom: 0px;
-  right: 50%;
-  transform: translateX(50%);
-  margin-bottom: 4.4em;
+  margin-top: 2em;
   border: 2px solid #000000;
-  border-radius: 5px;
-  padding: 20px;
-  font-size: 2em;
-}
-#notecontainer input {
-  border: 0;
-  border-bottom: 2px solid #000000;
-  font-size: 1.5em;
-  max-width: 20vw;
-}
-#notecontainer button {
-  background-color: #ffffff;
-  border-radius: 5px;
-  border: 2px solid #000000;
-  padding: 4px;
-  font-size: 1.2em;
+  padding: 1em;
 }
 #notecontainer * {
   font-family: "Segoe UI Bold", Tahoma, Geneva, Verdana, sans-serif;
-  display: inline;
+  font-size: 1.5em;
+}
+#notecontainer .flex-container {
+  display: flex;
+}
+#notecontainer p {
+  flex: 1;
+}
+#notecontainer input {
+  border: 0;
+  border-bottom: 0.25em solid black;
+  flex: 4;
+}
+#notecontainer button {
+  flex: 1;
+  background-color: #ffffff;
+  color: #000000;
 }
 
 .oldNote {

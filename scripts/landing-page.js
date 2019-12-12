@@ -1,47 +1,47 @@
-const devTools = false;
+const clearLs = false;
 
 function start () {
-
-    // If we're lauching with the dev tools enabled clear the
-    // local storage so that we've got a fresh slate
-    if (devTools) {
+    if (clearLs) {
         localStorage.clear();        
     }
 
+    // if this is a cold start, set up the notes we're going to need
     if (localStorage.getItem("notes") == undefined) {
         localStorage.setItem("notes", JSON.stringify([]));
     }
 
-    window.newnote.addEventListener("click", makeTitleInputVisible);
-
+    // Show all of the old notes we need
     showOldNotes();
 
-    // When the new note button is clicked, make all of the note in
-    // local storage and then open it inside of the editor
     window.go.addEventListener("click", makeNewNote);
     window.rootElement.addEventListener("keydown", makeNewNote);
+    window.newnote.addEventListener("click", makeTitleInputVisible);
 }
 
+/**
+ * When the new note button has been clicked, make the input field visible
+ * @param {*} e 
+ */
 function makeTitleInputVisible (e) {
     window.notecontainer.style.display = "block";
     window.rootElement.focus();
 }
 
 /**
- * Makes a new note object in localstorage
+ * Makes a new note object in localstorage and then redirects the user to the editor page
  */
 function makeNewNote (e) {
-
     if (e.type != "click" && e.type != "keydown") { return; }
     if (e.type == "keydown" && e.key != "Enter") { return; }
 
-    localStorage.setItem("editingNote", JSON.stringify({
+    localStorage.setItem("editingnote", JSON.stringify({
         "title" : window.rootElement.value,
         "content" : "",
         "id" : generateId(8), 
         "dateCreated" : new Date().toDateString()
     }));
 
+    localStorage.setItem("oldFlag", JSON.stringify(false));
     window.open("editor.html", "_self", false);
 }
 
@@ -53,7 +53,11 @@ function showOldNotes () {
     
     if (oldNotes == undefined || oldNotes.length == 0) { return; }
 
+    let count = 0;
     for (let note of oldNotes) {
+        if (count == 5) { break; }
+        count++;
+
         const template = document.querySelector("#oldNoteContainer");
         const clonedItem = document.importNode(template.content, true);
 
