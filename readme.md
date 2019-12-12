@@ -30,8 +30,7 @@ OEdit primarily runs on a static express server, saving all of its associated fi
 
 #### How are the notes displayed in localstorage?
 
-- Contains an array of note objects that store each of the individual notes
-- Each note object represents one of the notes that has been created using the outline-editor
+Inside of local storage there is an array of notes that have been previously created, inside each of the notes is the following JSON object:
   
 ```javascript
 {
@@ -41,3 +40,56 @@ OEdit primarily runs on a static express server, saving all of its associated fi
     "dateCreated" : new Date().toDateString()
 }
 ```
+
+### Why have I used SASS?
+
+I have used SASS (Syntactically awesome style sheets) extensively in this project to streamline the process of creaing CSS for my elements. SASS allows me to write CSS that mirrors the structure of the HTML which cuts down on the amount of time I need to spend writing and debugging CSS selectors. I have included an example of how I have used SASS to mirror the strcuture of my HTML below to show its power:
+
+The HTML structure of the sidebar for the editor
+```html
+<div id="sidebar">
+    <button id=indent>Indent</button>
+    <button id=outdent>Outdent</button>
+    <button id=lineUp>Move Up</button>
+    <button id=lineDown>Move Down</button>
+    <button id=display>Display</button>
+    <button id=settings>Settings</button>
+</div>
+```
+
+The SASS code behind the styling for this element
+```css
+#sidebar {
+    grid-area : "sidebar";
+    background-color : $dark-alt;
+    color : $white;
+
+    button {
+        width : 100%;
+
+        border-bottom : 1px solid gray;
+        background-color : $light;
+        font-size : 0.8em;
+    }
+}
+```
+
+What the CSS behind it would need to look like
+```css
+#sidebar {
+    grid-area : "sidebar";
+    background-color : $dark-alt;
+    color : $white;
+}
+
+#sidebar button {
+    width : 100%;
+
+    border-bottom : 1px solid gray;
+    background-color : $light;
+    font-size : 0.8em;
+}
+```
+
+*While there is little difference in the overall size of the written CSS, having the CSS styled in a logically similar way to the HTML cuts down on the time spent making selectors that target specific elements*.
+
