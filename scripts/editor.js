@@ -84,6 +84,8 @@ function visitHomePage (e) {
     window.open("index.html", "_self", false);
 }
 
+function handleNewLine() {return;}
+
 /**
  * Loads a note object into both the UI and the editor
  * @param {Note} note The note to be edited
@@ -126,34 +128,6 @@ function output (e) {
 function saveCursorPosition () {
     cursorPosition = window.editorwindow.selectionStart;
 }
-
-/**
- * Event Handler for outdent on current line
- * @param {*} e 
- */
-function outdentOnStartOfLine (e) {
-    const currentRow = outdentString(getSelectedRow());
-    window.editorwindow.value = getRowsToSelection().join("\n") + "\n" + currentRow + getPostSelectionRows().join("\n")
-    cursorPosition -= 1;
-    output(null);
-}
-
-/**
- * Event Handler for indent on current line
- * @param {*} e 
- */
-function indentOnStartOfLine (e) {
-    if(cursorPosition <= rootElement.length) {
-        return;
-    }
-
-    window.editorwindow.value = getRowsToSelection().join("\n") + indentString(getSelectedRow()) + getPostSelectionRows().join("\n");
-
-    cursorPosition += 1;
-    output(null);
-}
-
-
 
 /**
  * Prevents the user being able to switch focus while editing text
@@ -230,6 +204,32 @@ function getAllContent ()  {
 //#region Indent/Outdent
 
 /**
+ * Event Handler for outdent on current line
+ * @param {*} e 
+ */
+function outdentOnStartOfLine (e) {
+    const currentRow = outdentString(getSelectedRow());
+    window.editorwindow.value = getRowsToSelection().join("\n") + "\n" + currentRow + getPostSelectionRows().join("\n")
+    cursorPosition -= 1;
+    output(null);
+}
+
+/**
+ * Event Handler for indent on current line
+ * @param {*} e 
+ */
+function indentOnStartOfLine (e) {
+    if(cursorPosition <= rootElement.length) {
+        return;
+    }
+
+    window.editorwindow.value = getRowsToSelection().join("\n") + indentString(getSelectedRow()) + getPostSelectionRows().join("\n");
+
+    cursorPosition += 1;
+    output(null);
+}
+
+/**
  * Adds an indent to the start of a line
  * @param {string} str The string to have an indent added to
  */
@@ -287,13 +287,20 @@ function changeLinePosition (lineNumber, moveUp, textArea) {
  * Handle for the line being moved up event
  */
 function moveLineUp () {
+    // Switch the positions of the rows and then update the position of the cursor
     changeLinePosition(getSelectedRowNumber(), true, window.editorwindow);
+
+    let relCursorPosition = window.editorwindow.selectionStart;
+    relCursorPosition -= getRowsToSelection().join("\n").split("").length;
+
+    // We've got the position of the cursor on the line
 }
 
 /**
  * Handle for the line being moved down event
  */
 function moveLineDown () {
+    // Switch the positions of the rows and then update the position of the cursor
     changeLinePosition(getSelectedRowNumber(), false, window.editorwindow);
 }
 
