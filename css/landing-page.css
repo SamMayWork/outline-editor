@@ -26,7 +26,7 @@ body, html {
 
 .prevControls {
   grid-area: "oldNotes";
-  border-left: 5px solid black;
+  border-left: 0.2em solid black;
   width: 100%;
   height: 100%;
 }
@@ -50,11 +50,11 @@ body, html {
   padding: 0 20vw 0 20vw;
 }
 #button-container button {
-  border: 2px solid #000000;
+  border: 0.1em solid #000000;
   font-size: 1.5em;
   font-family: "Segoe UI Bold", Tahoma, Geneva, Verdana, sans-serif;
-  padding: 5px 10px 5px 10px;
   margin-top: 0.5em;
+  padding: 0.05em 0 0.15em 0;
   text-align: center;
   text-decoration: none;
   color: #000000;
@@ -65,11 +65,11 @@ body, html {
   display: block;
 }
 #button-container a {
-  border: 2px solid #000000;
+  border: 0.1em solid #000000;
   font-size: 1.5em;
   font-family: "Segoe UI Bold", Tahoma, Geneva, Verdana, sans-serif;
-  padding: 5px 10px 5px 10px;
   margin-top: 0.5em;
+  padding: 0.05em 0 0.15em 0;
   text-align: center;
   text-decoration: none;
   color: #000000;
@@ -78,7 +78,7 @@ body, html {
 #notecontainer {
   display: none;
   margin-top: 2em;
-  border: 2px solid #000000;
+  border: 0.1em solid #000000;
   padding: 1em;
 }
 #notecontainer * {
@@ -103,7 +103,7 @@ body, html {
 }
 
 .oldNote {
-  border: 2px solid black;
+  border: 0.05em solid black;
   padding: 0.5em;
   margin: 0.9em;
 }
@@ -113,7 +113,7 @@ body, html {
 .oldNote .noteTitle {
   font-size: 2em;
   text-align: center;
-  border-bottom: 1px solid #242424;
+  border-bottom: 0.05em solid #242424;
 }
 .oldNote .lrcontainer {
   display: flex;

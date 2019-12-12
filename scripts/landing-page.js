@@ -34,6 +34,11 @@ function makeNewNote (e) {
     if (e.type != "click" && e.type != "keydown") { return; }
     if (e.type == "keydown" && e.key != "Enter") { return; }
 
+    if(window.rootElement.value.length == 0) { 
+        alert("No content in the title field!");
+        return; 
+    }
+
     localStorage.setItem("editingnote", JSON.stringify({
         "title" : window.rootElement.value,
         "content" : "",
