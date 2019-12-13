@@ -22,7 +22,7 @@ function start () {
  * When the new note button has been clicked, make the input field visible
  * @param {*} e 
  */
-function makeTitleInputVisible (e) {
+function makeTitleInputVisible () {
     window.notecontainer.style.display = "block";
     window.rootElement.focus();
 }
@@ -90,7 +90,7 @@ function onButtonClick (e) {
     // Get the ID of the note that has been clicked and then redirect the user to the editor
     const editingNoteId = e.target.dataset.noteid;
     let currentNotes = JSON.parse(localStorage.notes);
-    for (note of currentNotes) {
+    for (let note of currentNotes) {
         if (note.id == editingNoteId) {
             localStorage.setItem("editingnote", JSON.stringify(note));
             localStorage.setItem("oldFlag", JSON.stringify(true));

@@ -37,7 +37,6 @@ function start () {
 
     //#region Event Listeners
     window.editorwindow.addEventListener("keydown", preventTab);
-    window.editorwindow.addEventListener("keydown", handleNewLine);
     window.editorwindow.addEventListener("keyup", output);
     window.editorwindow.addEventListener("keyup", saveCursorPosition);
 
@@ -57,12 +56,10 @@ function start () {
     setInterval(saveContent, settings.saveFrequency);
 }
 
-function visitHomePage (e) {
+function visitHomePage () {
     // Redirect the user to the home page
     window.open("index.html", "_self", false);
 }
-
-function handleNewLine() {return;}
 
 /**
  * Loads a note object into both the UI and the editor
@@ -170,13 +167,6 @@ function getRowsToSelection () {
     return rows.slice(0, rows.length-1);
 }
 
-/**
- * Gets all of the content from the editor window
- */
-function getAllContent ()  {
-    return window.editorwindow.value.split("\n");
-}
-
 //#endregion
 
 //#region Indent/Outdent
@@ -185,7 +175,7 @@ function getAllContent ()  {
  * Event Handler for outdent on current line
  * @param {*} e 
  */
-function outdentOnStartOfLine (e) {
+function outdentOnStartOfLine () {
     const currentRow = outdentString(getSelectedRow());
     window.editorwindow.value = getRowsToSelection().join("\n") + "\n" + currentRow + getPostSelectionRows().join("\n")
     cursorPosition -= 1;
@@ -196,7 +186,7 @@ function outdentOnStartOfLine (e) {
  * Event Handler for indent on current line
  * @param {*} e 
  */
-function indentOnStartOfLine (e) {
+function indentOnStartOfLine () {
     if(cursorPosition <= rootElement.length) {
         return;
     }
@@ -267,11 +257,6 @@ function changeLinePosition (lineNumber, moveUp, textArea) {
 function moveLineUp () {
     // Switch the positions of the rows and then update the position of the cursor
     changeLinePosition(getSelectedRowNumber(), true, window.editorwindow);
-
-    let relCursorPosition = window.editorwindow.selectionStart;
-    relCursorPosition -= getRowsToSelection().join("\n").split("").length;
-
-    // We've got the position of the cursor on the line
 }
 
 /**

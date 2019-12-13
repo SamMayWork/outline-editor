@@ -35,7 +35,7 @@ function onButtonClick (e) {
     // Get the ID of the note that has been clicked and then redirect the user to the editor
     const editingNoteId = e.target.dataset.noteid;
     let currentNotes = JSON.parse(localStorage.notes);
-    for (note of currentNotes) {
+    for (let note of currentNotes) {
         if (note.id == editingNoteId) {
             localStorage.setItem("editingnote", JSON.stringify(note));
             localStorage.setItem("oldFlag", JSON.stringify(true));
