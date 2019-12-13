@@ -38,6 +38,7 @@ function onButtonClick (e) {
     for (note of currentNotes) {
         if (note.id == editingNoteId) {
             localStorage.setItem("editingnote", JSON.stringify(note));
+            localStorage.setItem("oldFlag", JSON.stringify(true));
             window.open("editor.html", "_self", false);
             return;
         }

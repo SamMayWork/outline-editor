@@ -28,10 +28,11 @@ function start () {
 
     if (oldFlag == false) {
         let currentNotes = JSON.parse(localStorage.getItem("notes"));
-        currentNotes.push(JSON.parse(editingNote));
+        currentNotes.push(editingNote);
         localStorage.setItem("notes", JSON.stringify(currentNotes));    
     } 
 
+    currentNoteID = editingNote.id;
     loadNote(editingNote);
 
 

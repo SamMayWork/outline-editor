@@ -66,6 +66,8 @@ function showOldNotes () {
         const template = document.querySelector("#oldNoteContainer");
         const clonedItem = document.importNode(template.content, true);
 
+        console.log(note);
+
         clonedItem.id = "";
         clonedItem.querySelector(".noteTitle").textContent = note.title;
         clonedItem.querySelector(".dateCreated").textContent = note.dateCreated;
