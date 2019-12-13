@@ -1,6 +1,7 @@
 # OEdit
 
 ### UP891153 - Application Engineering Coursework Submission
+### This application requires npm run setup before it can be used
 
 OEdit is an outline editor, that tries to be keyboard-friendly.
 
@@ -26,7 +27,13 @@ The editor itself is comprised of 2 parts, the interface and the interpreter. Th
 
 #### So how does it work?
 
-OEdit primarily runs on a static express server, saving all of its associated files and content to the local storage of the device it's being used on. _This is defintely not a perfect solution, but it works for now, and it can be improved in the future._ OEdit does however, have a backend server that can be used to share notes with other people; this works by sending a POST to the API with all of the note content which is then stored into the database. The Server then generates a random string to host the note on and then binds it to that URL, so that anyone with that URL can access it and view the contents.
+OEdit primarily runs on a static express server, saving all of its associated files and content to the local storage of the device it's being used on. _This is defintely not a perfect solution, but it works for now, and it can be improved in the future._ 
+
+OEdit does have a server and associated database for the application, which allows users to share their notes publicly. The user can click the "display" button inside of their editor to send the version of the note they're currently working on to the server using a HTTP POST. The server recieves the request and saves the contents of the note to the database. If the server recieves a GET on the /api/ path with the ID of a note that in the database, it will serve the note and the content to the user. Unfortunately, due to time constraints I have not yet fully implemented viewing other peoples notes, however the server does send the information in raw JSON format. This is will be future work.
+
+#### What's inside the npm run setup?
+
+Inside of the NPM run setup command is actually 2 commands; firstly, the setup installs all of the dependencies needed to make the application run, then it opens PostgreSQL on the server and creates the database for all of the displayed notes to be held in. Then it loads the commands.sql file and executes it on the database - in this case it just creates an empty table.
 
 #### How are the notes displayed in localstorage?
 
@@ -40,6 +47,10 @@ Inside of local storage there is an array of notes that have been previously cre
     "dateCreated" : new Date().toDateString()
 }
 ```
+
+### Why have I used QUnit?
+
+I have used QUnit in this application to test a large portion of the editor.js file and the text-parser.js file. Unit testing allows me to see if my code works in the way I expect with a variety of test data - inside of the test.js files are all of the unit tests I have produced for this application. Using the results of these tests I was able to correct bugs inside of my files and make sure my application behaves as I expect. 
 
 ### Why have I used SASS?
 
@@ -93,3 +104,7 @@ What the CSS behind it would need to look like
 
 *While there is little difference in the overall size of the written CSS, having the CSS styled in a logically similar way to the HTML cuts down on the time spent making selectors that target specific elements*.
 
+## Future and Unfinished work
+- The display notes section of the program exists and has the functionality on the server-side but not on the client side
+- I have made all of the markup characters editable so it is possible to define your own markup language which is something I would like to implement in a settings file if possible
+- I have made most of the keybindings rebindable, however I have not allowed the user to actually make changes to the bindings on the interface yet
