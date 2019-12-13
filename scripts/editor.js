@@ -50,10 +50,34 @@ function start () {
     window.lineUp.addEventListener("click", moveLineUp);
     window.lineDown.addEventListener("click", moveLineDown);
 
+    window.display.addEventListener("click", displayNote);
+
     //#endregion
 
     // Set the auto-saver
     setInterval(saveContent, settings.saveFrequency);
+}
+
+/**
+ * Handle for the display note button being clicked
+ */
+function displayNote () {
+    const notes = JSON.parse(localStorage.getItem("notes"));
+    for (let note of notes) {
+        if (note.id == currentNoteID) {
+            fetch ("/api/savenote", {
+                method : "POST",
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                body : {
+                    id : note.id,
+                    title : note.title,
+                    content : note.content
+                }
+            });
+        }
+    }
 }
 
 function visitHomePage () {
