@@ -35,29 +35,6 @@ function start () {
     currentNoteID = editingNote.id;
     loadNote(editingNote);
 
-
-    /*
-
-    if (localStorage.getItem("editingNote") != undefined) {    
-        let currentNotes = JSON.parse(localStorage.getItem("notes"));
-        currentNotes.push(JSON.parse(localStorage.getItem("editingNote")));
-        localStorage.setItem("notes", JSON.stringify(currentNotes));
-        loadNote(JSON.parse(localStorage.getItem("editingNote")));
-        contentFound = true;
-    
-    } else if (localStorage.getItem("oldNote" != undefined) ) {
-    
-        notes = JSON.parse(localStorage.getItem("notes"));
-        for (let i in notes) {
-            if (i.id == JSON.parse(localStorage.getItem("oldNote"))) {
-                loadNote(i);
-                contentFound = true;
-            }
-        }
-    }
-
-    */
-
     //#region Event Listeners
     window.editorwindow.addEventListener("keydown", preventTab);
     window.editorwindow.addEventListener("keydown", handleNewLine);
@@ -135,10 +112,8 @@ function saveCursorPosition () {
  * @param {*} e 
  */
 function preventTab (e) {
-
-    if (e.key != settings.indent && e.key != settings.outdent) {
-        return;
-    }
+    if (e.ctrlKey == true && e.key == "ArrowUp") { moveLineUp(); }
+    if (e.ctrlKey == true && e.key == "ArrowDown") { moveLineDown(); }
 
     if (e.key === settings.indent) {
         if (e.shiftKey == true && settings.shiftForOutdent== true) {
@@ -150,8 +125,10 @@ function preventTab (e) {
         outdentOnStartOfLine();
     }
  
-    //window.editorwindow.selectionStart = cursorPosition;
-    //window.editorwindow.selectionEnd = cursorPosition;
+    if (e.key != settings.indent && e.key != settings.outdent) {
+        return;
+    }
+ 
     window.editorwindow.setSelectionRange(cursorPosition, cursorPosition);
     e.target.focus();
     e.preventDefault();
@@ -224,7 +201,7 @@ function indentOnStartOfLine (e) {
         return;
     }
 
-    window.editorwindow.value = getRowsToSelection().join("\n") + indentString(getSelectedRow()) + getPostSelectionRows().join("\n");
+    window.editorwindow.value = getRowsToSelection().join("\n") + "\n" + indentString(getSelectedRow()) + getPostSelectionRows().join("\n");
 
     cursorPosition += 1;
     output(null);
