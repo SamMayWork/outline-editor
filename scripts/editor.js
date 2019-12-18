@@ -1,252 +1,253 @@
-"use strict";
+
+window.addEventListener('load', start);
 
 let cursorPosition = 0;
-let rootElement = "";
+const rootElement = '';
 
 const settings = {
-    "indent" : "Tab",
-    "shiftForOutdent" : true,
-    "outdent" : "Tab",
-    "saveFrequency" : 1000
-}
+  indent: 'Tab',
+  shiftForOutdent: true,
+  outdent: 'Tab',
+  saveFrequency: 1000,
+};
 
-let currentNoteID = "";
+let currentNoteID = '';
 
-function start () {
-    // When the editor loads, it attempts to find a note to edit inside of the editing note part
-    // of localstorage. It then checks to see if the flag for it being an old note have been set, 
-    // if it's a new note, it pushes it into the notes section of localstorage, otherwise it just edits
-    // the pre-existing note
+function start() {
+  // When the editor loads, it attempts to find a note to edit inside of the editing note part
+  // of localstorage. It then checks to see if the flag for it being an old note have been set,
+  // if it's a new note, it pushes it into the notes section of localstorage, otherwise it just edits
+  // the pre-existing note
 
-    const editingNote = JSON.parse(localStorage.getItem("editingnote"));
-    const oldFlag = JSON.parse(localStorage.getItem("oldFlag"));
+  const editingNote = JSON.parse(localStorage.getItem('editingnote'));
+  const oldFlag = JSON.parse(localStorage.getItem('oldFlag'));
 
-    if (editingNote == undefined) {
-        window.open("404.html", "_self", false);
-        return;
-    }
+  if (editingNote == undefined) {
+    window.open('404.html', '_self', false);
+    return;
+  }
 
-    if (oldFlag == false) {
-        let currentNotes = JSON.parse(localStorage.getItem("notes"));
-        currentNotes.push(editingNote);
-        localStorage.setItem("notes", JSON.stringify(currentNotes));    
-    } 
+  if (oldFlag == false) {
+    const currentNotes = JSON.parse(localStorage.getItem('notes'));
+    currentNotes.push(editingNote);
+    localStorage.setItem('notes', JSON.stringify(currentNotes));
+  }
 
-    currentNoteID = editingNote.id;
-    loadNote(editingNote);
+  currentNoteID = editingNote.id;
+  loadNote(editingNote);
 
-    //#region Event Listeners
-    window.editorwindow.addEventListener("keydown", preventTab);
-    window.editorwindow.addEventListener("keyup", output);
-    window.editorwindow.addEventListener("keyup", saveCursorPosition);
+  // #region Event Listeners
+  window.editorwindow.addEventListener('keydown', preventTab);
+  window.editorwindow.addEventListener('keyup', output);
+  window.editorwindow.addEventListener('keyup', saveCursorPosition);
 
-    window.indent.addEventListener ("click", indentOnStartOfLine);
-    window.outdent.addEventListener ("click", outdentOnStartOfLine);
+  window.indent.addEventListener('click', indentOnStartOfLine);
+  window.outdent.addEventListener('click', outdentOnStartOfLine);
 
-    window.editorwindow.addEventListener("blur", saveCursorPosition);
+  window.editorwindow.addEventListener('blur', saveCursorPosition);
 
-    window.logo.addEventListener("click", visitHomePage);
+  window.logo.addEventListener('click', visitHomePage);
 
-    window.lineUp.addEventListener("click", moveLineUp);
-    window.lineDown.addEventListener("click", moveLineDown);
+  window.lineUp.addEventListener('click', moveLineUp);
+  window.lineDown.addEventListener('click', moveLineDown);
 
-    window.display.addEventListener("click", displayNote);
+  window.display.addEventListener('click', displayNote);
 
-    //#endregion
+  // #endregion
 
-    // Set the auto-saver
-    setInterval(saveContent, settings.saveFrequency);
+  // Set the auto-saver
+  setInterval(saveContent, settings.saveFrequency);
 }
 
 /**
  * Handle for the display note button being clicked
  */
-function displayNote () {
-    const notes = JSON.parse(localStorage.getItem("notes"));
-    for (let note of notes) {
-        if (note.id == currentNoteID) {
-            fetch ("/api/savenote", {
-                method : "POST",
-                headers : {
-                    "Content-Type" : "application/json"
-                },
-                body : {
-                    id : note.id,
-                    title : note.title,
-                    content : note.content
-                }
-            });
-        }
+async function displayNote() {
+  const notes = JSON.parse(localStorage.getItem('notes'));
+  for (const note of notes) {
+    if (note.id == currentNoteID) {
+      await fetch('/api/savenote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: note.id,
+          title: note.title,
+          content: note.content,
+        }),
+      });
     }
+  }
 }
 
-function visitHomePage () {
-    // Redirect the user to the home page
-    window.open("index.html", "_self", false);
+function visitHomePage() {
+  // Redirect the user to the home page
+  window.open('index.html', '_self', false);
 }
 
 /**
  * Loads a note object into both the UI and the editor
  * @param {Note} note The note to be edited
  */
-function loadNote (note) {
-    currentNoteID = note.id;
-    window.editorwindow.value = note.content; 
-    window.noteTitle.textContent = note.title;
-    output(null);
+function loadNote(note) {
+  currentNoteID = note.id;
+  window.editorwindow.value = note.content;
+  window.noteTitle.textContent = note.title;
+  output(null);
 }
 
 /**
  * Every specified unit of time (in the settings) this functions saves the content
  * of the document to the local storage on the device
  */
-function saveContent () {
-    let notes = JSON.parse(localStorage.getItem("notes"));
-    for (let i of notes) {
-        if (i.id == currentNoteID) {
-            i.content = window.editorwindow.value;
-        }
+function saveContent() {
+  const notes = JSON.parse(localStorage.getItem('notes'));
+  for (const i of notes) {
+    if (i.id == currentNoteID) {
+      i.content = window.editorwindow.value;
     }
+  }
 
-    localStorage.setItem("notes", JSON.stringify(notes));
+  localStorage.setItem('notes', JSON.stringify(notes));
 }
 
 /**
  * Updates the window content by interpeting the markdowm in the editor
- * @param {*} e 
+ * @param {*} e
  */
-function output (e) {
-    // Prevent updating on arrow keys for optimisation
-    if (e !== null && e.key.substring(0, 5) == "Arrow") { return; }
-    interpretContent(window.editorwindow.value, window.outputWindow);
+function output(e) {
+  // Prevent updating on arrow keys for optimisation
+  if (e !== null && e.key.substring(0, 5) == 'Arrow') { return; }
+  interpretContent(window.editorwindow.value, window.outputWindow);
 }
 
 /**
  * Event handler for focus leaving the textarea
  */
-function saveCursorPosition () {
-    cursorPosition = window.editorwindow.selectionStart;
+function saveCursorPosition() {
+  cursorPosition = window.editorwindow.selectionStart;
 }
 
 /**
  * Prevents the user being able to switch focus while editing text
- * @param {*} e 
+ * @param {*} e
  */
-function preventTab (e) {
-    if (e.ctrlKey == true && e.key == "ArrowUp") { moveLineUp(); }
-    if (e.ctrlKey == true && e.key == "ArrowDown") { moveLineDown(); }
+function preventTab(e) {
+  if (e.ctrlKey == true && e.key == 'ArrowUp') { moveLineUp(); }
+  if (e.ctrlKey == true && e.key == 'ArrowDown') { moveLineDown(); }
 
-    if (e.key === settings.indent) {
-        if (e.shiftKey == true && settings.shiftForOutdent== true) {
-            outdentOnStartOfLine();
-        } else {
-            indentOnStartOfLine();
-        }
-    } else if (e.key === settings.outdent && settings.shiftForOutdent == false) {
-        outdentOnStartOfLine();
+  if (e.key === settings.indent) {
+    if (e.shiftKey == true && settings.shiftForOutdent == true) {
+      outdentOnStartOfLine();
+    } else {
+      indentOnStartOfLine();
     }
- 
-    if (e.key != settings.indent && e.key != settings.outdent) {
-        return;
-    }
- 
-    window.editorwindow.setSelectionRange(cursorPosition, cursorPosition);
-    e.target.focus();
-    e.preventDefault();
+  } else if (e.key === settings.outdent && settings.shiftForOutdent == false) {
+    outdentOnStartOfLine();
+  }
+
+  if (e.key != settings.indent && e.key != settings.outdent) {
+    return;
+  }
+
+  window.editorwindow.setSelectionRange(cursorPosition, cursorPosition);
+  e.target.focus();
+  e.preventDefault();
 }
 
-//#region content getters
+// #region content getters
 
 /**
  * Returns the number index of the selected row
  */
-function getSelectedRowNumber () {
-    return window.editorwindow.value.substring(0, cursorPosition).split("\n").length -1;
+function getSelectedRowNumber() {
+  return window.editorwindow.value.substring(0, cursorPosition).split('\n').length - 1;
 }
 
 /**
  * Returns the entire content of the selected row
  */
-function getSelectedRow () {
-    let content = window.editorwindow.value;
-    content = content.replace(getRowsToSelection().join("\n"), "");
-    content = content.replace(getPostSelectionRows().join("\n"), "");
-    return content.replace("\n", "");
+function getSelectedRow() {
+  let content = window.editorwindow.value;
+  content = content.replace(getRowsToSelection().join('\n'), '');
+  content = content.replace(getPostSelectionRows().join('\n'), '');
+  return content.replace('\n', '');
 }
 
 /**
  * Gets an array of all the rows after the selected line
  */
-function getPostSelectionRows () {
-    const allRows = window.editorwindow.value.split("\n");
-    const rowCountBeforeSelection = getRowsToSelection().length + 1;
-    return allRows.slice(rowCountBeforeSelection);
+function getPostSelectionRows() {
+  const allRows = window.editorwindow.value.split('\n');
+  const rowCountBeforeSelection = getRowsToSelection().length + 1;
+  return allRows.slice(rowCountBeforeSelection);
 }
 
 /**
  * Gets an array of all the rows of content up to (but not including) the selected line
  */
-function getRowsToSelection () {
-    const rows = window.editorwindow.value.substring(0, cursorPosition).split("\n");
-    return rows.slice(0, rows.length-1);
+function getRowsToSelection() {
+  const rows = window.editorwindow.value.substring(0, cursorPosition).split('\n');
+  return rows.slice(0, rows.length - 1);
 }
 
-//#endregion
+// #endregion
 
-//#region Indent/Outdent
+// #region Indent/Outdent
 
 /**
  * Event Handler for outdent on current line
- * @param {*} e 
+ * @param {*} e
  */
-function outdentOnStartOfLine () {
-    const currentRow = outdentString(getSelectedRow());
-    window.editorwindow.value = getRowsToSelection().join("\n") + "\n" + currentRow + getPostSelectionRows().join("\n")
-    cursorPosition -= 1;
-    output(null);
+function outdentOnStartOfLine() {
+  const currentRow = outdentString(getSelectedRow());
+  window.editorwindow.value = `${getRowsToSelection().join('\n')}\n${currentRow}${getPostSelectionRows().join('\n')}`;
+  cursorPosition -= 1;
+  output(null);
 }
 
 /**
  * Event Handler for indent on current line
- * @param {*} e 
+ * @param {*} e
  */
-function indentOnStartOfLine () {
-    if(cursorPosition <= rootElement.length) {
-        return;
-    }
+function indentOnStartOfLine() {
+  if (cursorPosition <= rootElement.length) {
+    return;
+  }
 
-    window.editorwindow.value = getRowsToSelection().join("\n") + "\n" + indentString(getSelectedRow()) + getPostSelectionRows().join("\n");
+  window.editorwindow.value = `${getRowsToSelection().join('\n')}\n${indentString(getSelectedRow())}${getPostSelectionRows().join('\n')}`;
 
-    cursorPosition += 1;
-    output(null);
+  cursorPosition += 1;
+  output(null);
 }
 
 /**
  * Adds an indent to the start of a line
  * @param {string} str The string to have an indent added to
  */
-function indentString (str) {
-    return `\t${str}`;
+function indentString(str) {
+  return `\t${str}`;
 }
 
 /**
  * Removes a tab character from the start of a string
- * @param {string} str String to outdent 
+ * @param {string} str String to outdent
  */
-function outdentString (str) {
-    const strA = str.split("");
-    let revChar = strA.shift();
+function outdentString(str) {
+  const strA = str.split('');
+  const revChar = strA.shift();
 
-    if(revChar != '\t') {
-        strA.unshift(revChar);
-    }
+  if (revChar != '\t') {
+    strA.unshift(revChar);
+  }
 
-    return strA.join("");
+  return strA.join('');
 }
 
-//#endregion
+// #endregion
 
-//#region Line Movement
+// #region Line Movement
 
 /**
  * Moves a given line in a text area up or down
@@ -254,41 +255,41 @@ function outdentString (str) {
  * @param {boolean} moveUp Indicates if the line should be moved up or down
  * @param {TextArea} textArea The textarea to move the line inside of
  */
-function changeLinePosition (lineNumber, moveUp, textArea) {
-    if (lineNumber < 0 || lineNumber > textArea.value.split("\n").length) { return; }
-    if (lineNumber == 0 && moveUp == true) { return; }
-    if (lineNumber == textArea.value.split("\n").length && moveUp == false) { return; }
+function changeLinePosition(lineNumber, moveUp, textArea) {
+  if (lineNumber < 0 || lineNumber > textArea.value.split('\n').length) { return; }
+  if (lineNumber == 0 && moveUp == true) { return; }
+  if (lineNumber == textArea.value.split('\n').length && moveUp == false) { return; }
 
-    // Swap the indexes of the lines and then push back onto the text area
+  // Swap the indexes of the lines and then push back onto the text area
 
-    let allLines = textArea.value.split("\n");
-    let tmp = allLines[lineNumber];
-    
-    if (moveUp) {
-        allLines[lineNumber] = allLines[lineNumber-1];
-        allLines[lineNumber-1] = tmp;
-    } else {
-        allLines[lineNumber] = allLines[lineNumber+1];
-        allLines[lineNumber+1] = tmp;
-    }
+  const allLines = textArea.value.split('\n');
+  const tmp = allLines[lineNumber];
 
-    textArea.value = allLines.join("\n");
+  if (moveUp) {
+    allLines[lineNumber] = allLines[lineNumber - 1];
+    allLines[lineNumber - 1] = tmp;
+  } else {
+    allLines[lineNumber] = allLines[lineNumber + 1];
+    allLines[lineNumber + 1] = tmp;
+  }
+
+  textArea.value = allLines.join('\n');
 }
 
 /**
  * Handle for the line being moved up event
  */
-function moveLineUp () {
-    // Switch the positions of the rows and then update the position of the cursor
-    changeLinePosition(getSelectedRowNumber(), true, window.editorwindow);
+function moveLineUp() {
+  // Switch the positions of the rows and then update the position of the cursor
+  changeLinePosition(getSelectedRowNumber(), true, window.editorwindow);
 }
 
 /**
  * Handle for the line being moved down event
  */
-function moveLineDown () {
-    // Switch the positions of the rows and then update the position of the cursor
-    changeLinePosition(getSelectedRowNumber(), false, window.editorwindow);
+function moveLineDown() {
+  // Switch the positions of the rows and then update the position of the cursor
+  changeLinePosition(getSelectedRowNumber(), false, window.editorwindow);
 }
 
-//#endregion
+// #endregion

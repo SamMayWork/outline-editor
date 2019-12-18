@@ -1,18 +1,17 @@
-"use strict";
 
 // A collection of markdown characters and their HTML equivalent
 const specChars = {
-    "chars" : [
-        { "md" : "\t", "html" : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', "ehtml" : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" },
-        { "md" : "\n", "html" : '<br>'},
-        { "md" : "*", "html" : "<strong>", "ehtml" : "</strong>" },
-        { "md" : "_", "html" : "<em>", "ehtml" : "</em>" }
-    ],
+  chars: [
+    { md: '\t', html: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', ehtml: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' },
+    { md: '\n', html: '<br>' },
+    { md: '*', html: '<strong>', ehtml: '</strong>' },
+    { md: '_', html: '<em>', ehtml: '</em>' },
+  ],
 
-    "optionalChars" : {
-        "bullet" : "-"
-    }
-}
+  optionalChars: {
+    bullet: '-',
+  },
+};
 
 /**
  * Takes the content of a text area and (assuming its markup is valid) converts
@@ -20,12 +19,12 @@ const specChars = {
  * @param {string} str Markdown content to represent
  * @param {*} element Element to insert the marked down document into
  */
-function interpretContent (str, element) {
-    element.innerHTML = "";
-    const lines = str.split("\n");    
-    for (let i of lines) {
-        element.innerHTML += convertMdToHTML(i) + "<br>";
-    }
+function interpretContent(str, element) {
+  element.innerHTML = '';
+  const lines = str.split('\n');
+  for (const i of lines) {
+    element.innerHTML += `${convertMdToHTML(i)}<br>`;
+  }
 }
 
 /**
@@ -33,111 +32,103 @@ function interpretContent (str, element) {
  * @param {String} str String to convert into HTML
  */
 function convertMdToHTML(str) {
-    
-    str = processBulletPoints (str);
-    str = escapeStrings(str);
-    str = processHeadings(str);
-    
-    const strA = str.split("");
-    const tokens = [];
+  str = processBulletPoints(str);
+  str = escapeStrings(str);
+  str = processHeadings(str);
 
-    // Go through each character
-    for (let i = 0; i < strA.length; i++) {
+  const strA = str.split('');
+  const tokens = [];
 
-        // Does the character match any of the special markdown chars we're looking for?
-        for (let charI = 0; charI < specChars.chars.length; charI++) {
-
-            // Sweet, push the index of the character and the chars we're replacing
-            // it with into the list
-            if (strA[i] == specChars.chars[charI].md) {
-
-                // Count how many of that kind of token already exist on the line
-                let count = 0;
-                for (let token of tokens) {
-                    if (token[1] == charI) {
-                        count += 1;
-                    }
-                }
-
-                // If the amount is even or 0, then push a start tag, otherwise push an end tag
-                if (count == 0 || count % 2 == 0) { tokens.push([i, charI, specChars.chars[charI].html]); continue; }
-                if (count % 2 == 1) { tokens.push([i, charI, specChars.chars[charI].ehtml]); }
-            }
+  // Go through each character
+  for (let i = 0; i < strA.length; i++) {
+    // Does the character match any of the special markdown chars we're looking for?
+    for (let charI = 0; charI < specChars.chars.length; charI++) {
+      // Sweet, push the index of the character and the chars we're replacing
+      // it with into the list
+      if (strA[i] == specChars.chars[charI].md) {
+        // Count how many of that kind of token already exist on the line
+        let count = 0;
+        for (const token of tokens) {
+          if (token[1] == charI) {
+            count += 1;
+          }
         }
-    }    
 
-    for (let token of tokens) {
-        // Overwrite the markdown character with the chars we need for the HTML version
-        console.log(`${token}`);
-        
-        strA.splice(token[0], 1, token[2]);
+        // If the amount is even or 0, then push a start tag, otherwise push an end tag
+        if (count == 0 || count % 2 == 0) { tokens.push([i, charI, specChars.chars[charI].html]); continue; }
+        if (count % 2 == 1) { tokens.push([i, charI, specChars.chars[charI].ehtml]); }
+      }
     }
+  }
 
-    return strA.join("");
+  for (const token of tokens) {
+    // Overwrite the markdown character with the chars we need for the HTML version
+    strA.splice(token[0], 1, token[2]);
+  }
+
+  return strA.join('');
 }
 
 /**
  * Escapes a string of all angle brackets by replacing them with nothing
- * @param {String} str The string to remove angle brackets from 
+ * @param {String} str The string to remove angle brackets from
  */
-function escapeStrings (str) {
-    const strA = str.split("");
-    const naughtyObjects = [];
-    for (let i = 0; i < strA.length; i++) {
-        if (strA[i] == "<" || strA[i] == ">") {
-            naughtyObjects.push(i);
-        }
+function escapeStrings(str) {
+  const strA = str.split('');
+  const naughtyObjects = [];
+  for (let i = 0; i < strA.length; i++) {
+    if (strA[i] == '<' || strA[i] == '>') {
+      naughtyObjects.push(i);
     }
+  }
 
-    for (let i = naughtyObjects.length - 1; i >= 0; i--) {
-        strA.splice(naughtyObjects[i], 1, "");
-    }
+  for (let i = naughtyObjects.length - 1; i >= 0; i--) {
+    strA.splice(naughtyObjects[i], 1, '');
+  }
 
-    return strA.join("");
+  return strA.join('');
 }
 
 /**
  * Converts all markdown headings into proper HTML headings
- * @param {String} str 
+ * @param {String} str
  */
-function processHeadings (str) {
-    const strA = str.split("");
-    let count = 0;
+function processHeadings(str) {
+  const strA = str.split('');
+  let count = 0;
 
-    for (let i = 0; i < strA.length; i++) {
-        if (strA[i] != "#") {
-            count = i;
-            break;
-        }
+  for (let i = 0; i < strA.length; i++) {
+    if (strA[i] != '#') {
+      count = i;
+      break;
     }
+  }
 
-    if (count > 0 && count <= 6) {
-        strA.splice(0, count, `<h${count}>`);
-        strA.push(`</h${count}>`);
-    }
+  if (count > 0 && count <= 6) {
+    strA.splice(0, count, `<h${count}>`);
+    strA.push(`</h${count}>`);
+  }
 
-    return strA.join("");
+  return strA.join('');
 }
 
 /**
  * For a given string, inserts the chosen bullet character after all tabs
- * @param {*} str 
+ * @param {*} str
  */
-function processBulletPoints (str) {
-
-    // Iterate through, find the index after all of the tabs and insert
-    // the chosen tab character
-    let bulletIndex = 0;
-    for (let i = 0; i < str.length; i++) {
-        if (str[i] != "\t") {
-            bulletIndex = i;
-            break;
-        }
+function processBulletPoints(str) {
+  // Iterate through, find the index after all of the tabs and insert
+  // the chosen tab character
+  let bulletIndex = 0;
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] != '\t') {
+      bulletIndex = i;
+      break;
     }
+  }
 
-    if (bulletIndex > 0) {
-        return splice(str, bulletIndex, specChars.optionalChars.bullet);
-    } else {
-        return str;
-    }
+  if (bulletIndex > 0) {
+    return splice(str, bulletIndex, specChars.optionalChars.bullet);
+  }
+  return str;
 }

@@ -19,8 +19,11 @@ sql.on("error", (err) => {
     sql.end();
 });
 
+
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
+
 app.use(express.static("."));
-app.use(bodyParser.urlencoded({extended:false}));
 
 app.get("/api", async (req, res) => {
     console.log("request");
@@ -30,17 +33,13 @@ app.get("/api", async (req, res) => {
 });
 
 app.post("/api/savenote", (req, res) => {
-    printcontent (req);
+    displayNote(req.body.title, req.body.content);
     res.end();
 });
 
-async function printcontent (req) {
-    console.log(await req.body.id);
-}
-
-//app.get("*", function (req, res) {
-//    res.end("file not found");
-//});
+app.get("*", function (req, res) {
+    res.end("file not found");
+});
 
 app.listen(8080);
 

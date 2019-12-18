@@ -7,7 +7,7 @@
     <script src="scripts/landing-page.js"></script>
     <title>Document</title>
 </head>
-<body onload="start();">
+<body>
     <div class="grid-container">
         <div class="new-controls">
             <div class="innercontainer">
@@ -28,17 +28,17 @@
                 </div>
             </div>
         </div>
-        <div class="prevControls">
-            <template id="oldNoteContainer">
-                <div class="oldNote">    
-                    <p class="noteTitle"></p>
-                    <p class="contentpreview"></p>
-                    <div class="lrcontainer">
-                        <p class="dateCreated"></p>
-                        <p class="linesCount"></p>
-                    </div>
+        <template id="oldNoteContainer">
+            <div class="oldNote">    
+                <p class="noteTitle"></p>
+                <p class="contentpreview"></p>
+                <div class="lrcontainer">
+                    <p class="dateCreated"></p>
+                    <p class="linesCount"></p>
                 </div>
-            </template>
+            </div>
+        </template>
+        <div class="prevControls">
         </div>
     </div>
 </body>
