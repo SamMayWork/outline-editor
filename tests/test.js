@@ -71,3 +71,9 @@ QUnit.test("Switching line positions", function (assert) {
     changeLinePosition(0, false, x);
     assert.equal(x.value, "1\n2\n3");
 });
+
+QUnit.module("Revised Text-Parser");
+
+QUnit.test("Headings processor", fucntion(assert) {
+    
+});
